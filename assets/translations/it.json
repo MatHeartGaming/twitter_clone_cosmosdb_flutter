@@ -69,6 +69,13 @@
     "context_menu_title": "Menù",
     "context_menu_share_label": "Condividi",
 
+    "nav_bar_home_item": "Inizio",
+    "nav_bar_home_tooltip": "Feed iniziale",
+    "nav_bar_search_item": "Cerca",
+    "nav_bar_search_tooltip": "Cerca",
+    "nav_bar_community_item": "Comunità",
+    "nav_bar_community_tooltip": "Feed dalla comunirà",
+
     "go_to_home_page_tooltip_text": "Vai alla Home",
     "admin_text": "Admin: {}",
     "menu_text": "Menu",
