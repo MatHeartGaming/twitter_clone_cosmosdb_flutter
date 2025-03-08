@@ -24,6 +24,19 @@ class User {
     this.posted = const [],
   });
 
+  User.empty({
+    this.nome = '',
+    this.cognome = '',
+    this.username = '',
+    required this.dateCreated,
+    this.phoneNumber = '',
+    this.followed = const [],
+    this.postLiked = const [],
+    this.posted = const [],
+  });
+
+  String get completeName => '$nome $cognome';
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'nome': nome,

@@ -76,6 +76,15 @@
     "nav_bar_community_item": "Comunità",
     "nav_bar_community_tooltip": "Feed dalla comunirà",
 
+    "drawer_following_count": "{} seguiti",
+    "drawer_profile_item": "Profilo",
+    "drawer_premium_item": "Premium",
+    "drawer_saved_item": "Elementi Salvati",
+    "drawer_jobs_item": "Lavori",
+    "drawer_lists_item": "Liste",
+    "drawer_spaces_item": "Spazi",
+    "drawer_monetization_item": "Monetizzazione",
+
     "go_to_home_page_tooltip_text": "Vai alla Home",
     "admin_text": "Admin: {}",
     "menu_text": "Menu",

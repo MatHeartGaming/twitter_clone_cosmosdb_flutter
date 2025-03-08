@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:twitter_cosmos_db/domain/models/models.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -37,6 +38,17 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
       widget.messagesView,
     ];
     return Scaffold(
+      drawerEnableOpenDragGesture: true,
+      drawer: Drawer(
+          child: DrawerContent(
+            user: User.empty(
+              nome: 'Matteo',
+              cognome: 'Buompastore',
+              username: '@MatBuompy',
+              dateCreated: DateTime.now(),
+            ),
+          ),
+        ),
       body: IndexedStack(index: widget.pageIndex, children: viewRoutes),
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: widget.pageIndex),
     );
