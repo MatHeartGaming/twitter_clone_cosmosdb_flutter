@@ -21,6 +21,17 @@ class Post {
     this.likes = const [],
   }) : id = id ?? const Uuid().v6();
 
+  Post.empty({
+    this.userId = '',
+    id,
+    this.body = '',
+    this.urlImage,
+    this.comments = const [],
+    this.likes = const [],
+  }) : id = id ?? const Uuid().v6();
+
+  bool get isUrlImageValid => urlImage != null && urlImage!.isNotEmpty;
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'userId': userId,

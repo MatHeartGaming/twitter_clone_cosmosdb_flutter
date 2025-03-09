@@ -39,18 +39,18 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     ];
     return Scaffold(
       drawerEnableOpenDragGesture: true,
-      drawer: Drawer(
-          child: DrawerContent(
-            user: User.empty(
-              nome: 'Matteo',
-              cognome: 'Buompastore',
-              username: '@MatBuompy',
-              dateCreated: DateTime.now(),
-            ),
-          ),
+      drawer: DrawerContent(
+        user: User.empty(
+          nome: 'Matteo',
+          cognome: 'Buompastore',
+          username: '@MatBuompy',
+          dateCreated: DateTime.now(),
         ),
+      ),
       body: IndexedStack(index: widget.pageIndex, children: viewRoutes),
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: widget.pageIndex),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: widget.pageIndex,
+      ),
     );
   }
 }

@@ -13,3 +13,6 @@ export 'package:twitter_cosmos_db/presentation/providers/lifecycle/app_state_pro
 
 // Tab Bar
 export 'package:twitter_cosmos_db/presentation/providers/bottom_navigation_bar_index_provider/bottom_navbar_index_provider.dart';
+
+// Shared Prefs
+export 'package:twitter_cosmos_db/presentation/providers/dark_mode_providers/is_dark_mode_provider.dart';

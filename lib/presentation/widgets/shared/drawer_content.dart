@@ -1,65 +1,103 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/shared/circle_picture.dart';
 
-class DrawerContent extends StatelessWidget {
+class DrawerContent extends ConsumerWidget {
   final User user;
 
   const DrawerContent({super.key, required this.user});
 
   @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        DrawerHeader(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CirclePicture(
-                    urlPicture: profilePic,
-                    minRadius: 20,
-                    maxRadius: 20,
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(FontAwesomeIcons.gears),
-                  ),
-                ],
-              ),
-
-              Text(
-                user.completeName,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                user.username,
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-              ),
-              Text(
-                'drawer_following_count',
-              ).tr(args: ['${user.followed.length}']),
-            ],
-          ),
-        ),
-
-        ..._getMenuItems().entries.map(
-          (item) => ListTile(
-            leading: Icon(item.value),
-            title: Text(
-              item.key,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(isDarkModeProvider);
+    return Drawer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DrawerHeader(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CirclePicture(
+                      urlPicture: profilePic,
+                      minRadius: 20,
+                      maxRadius: 20,
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(FontAwesomeIcons.gears),
+                    ),
+                  ],
+                ),
+                Text(
+                  user.completeName,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  user.username,
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                ),
+                Text(
+                  'drawer_following_count',
+                ).tr(args: ['${user.followed.length}']),
+              ],
             ),
           ),
-        ),
-      ],
+
+          // Expanding the list of menu items to push the toggle button to the bottom
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children:
+                  _getMenuItems().entries
+                      .map(
+                        (item) => ListTile(
+                          leading: Icon(item.value),
+                          title: Text(
+                            item.key,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+            ),
+          ),
+
+          // Align the toggle button at the bottom left
+          Padding(
+            padding: const EdgeInsets.only(left: 16, bottom: 20),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: IconButton(
+                onPressed: () {
+                  final isDark =
+                      ref.read(themeNotifierProvider.notifier).toggleDarkmode();
+                  ref
+                      .read(isDarkModeProvider.notifier)
+                      .update((state) => isDark);
+                },
+                icon:
+                    isDarkMode
+                        ? FadeIn(child: Icon(Icons.light_mode))
+                        : FadeIn(child: Icon(Icons.dark_mode)),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

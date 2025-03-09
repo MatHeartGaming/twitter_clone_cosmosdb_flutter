@@ -10,18 +10,21 @@ import 'presentation/providers/providers.dart';
 
 Future<void> main() async {
   await _initialConfigs();
-  runApp(EasyLocalization(
+  runApp(
+    EasyLocalization(
       supportedLocales: supportedLocalisations,
       path: 'assets/translations',
       fallbackLocale: fallbackLocale,
-      child: const ProviderScope(child: MainApp())));
+      child: const ProviderScope(child: MainApp()),
+    ),
+  );
 }
 
 Future<void> _initialConfigs() async {
   await dotenv.load(fileName: '.env');
   WidgetsFlutterBinding.ensureInitialized();
   ConnectionStatusSingleton.getInstance().initialize();
-
+  await SharedPrefsPlugin.init();
   await EasyLocalization.ensureInitialized();
 }
 
@@ -81,28 +84,25 @@ class MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
     final appLanguage = ref.watch(localeProvider);
     final appRouterProvider = ref.watch(goRouterProvider);
 
-    ref.listen(
-      connectivityStreamProvider,
-      (isConnectedPrevious, isConnectedNext) {
-        ref.read(connectivityProvider.notifier).update(
-          (state) {
-            state = isConnectedNext.value ?? true;
-            return state;
-          },
-        );
-      },
-    );
+    ref.listen(connectivityStreamProvider, (
+      isConnectedPrevious,
+      isConnectedNext,
+    ) {
+      ref.read(connectivityProvider.notifier).update((state) {
+        state = isConnectedNext.value ?? true;
+        return state;
+      });
+    });
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
-      locale: appLanguage!.localeCode.isEmpty
-          ? context.locale
-          : Locale(appLanguage.localeCode),
-      theme: appTheme.getTheme(
-        isDarkMode: appTheme.isDarkMode,
-      ),
+      locale:
+          appLanguage!.localeCode.isEmpty
+              ? context.locale
+              : Locale(appLanguage.localeCode),
+      theme: appTheme.getTheme(isDarkMode: appTheme.isDarkMode),
       routerConfig: appRouterProvider,
     );
   }

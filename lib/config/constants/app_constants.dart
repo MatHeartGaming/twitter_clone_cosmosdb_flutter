@@ -1,6 +1,9 @@
 // Logger
 import 'package:logger/logger.dart';
 
+// Shared prefs
+const String isDarkTheme = "dark_theme";
+
 // Paths
 const String basePath = '/';
 const String homePath = '/home';
