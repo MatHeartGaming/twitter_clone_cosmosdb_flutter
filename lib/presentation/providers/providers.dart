@@ -17,6 +17,10 @@ export 'package:twitter_cosmos_db/presentation/providers/bottom_navigation_bar_i
 // Shared Prefs
 export 'package:twitter_cosmos_db/presentation/providers/dark_mode_providers/is_dark_mode_provider.dart';
 
-// Repositories
+// User
 export 'package:twitter_cosmos_db/presentation/providers/users_repository/users_repository_provider.dart';
+//export 'package:twitter_cosmos_db/presentation/providers/users_repository/users_repository_provider.dart';
+
+// Posts
 export 'package:twitter_cosmos_db/presentation/providers/posts_repository/posts_repository_provider.dart';
+export 'package:twitter_cosmos_db/presentation/providers/posts_repository/load_posts_provider.dart';

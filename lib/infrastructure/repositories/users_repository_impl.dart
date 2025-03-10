@@ -1,11 +1,13 @@
+import 'package:twitter_cosmos_db/domain/datasources/datasources.dart';
 import 'package:twitter_cosmos_db/domain/models/user.dart';
 import 'package:twitter_cosmos_db/domain/repositories/users_repository.dart';
+import 'package:twitter_cosmos_db/infrastructure/datasources/users_datasource_impl.dart';
 
 class UsersRepositoryImpl implements UsersRepository {
-  final UsersRepository _db;
+  final UsersDatasource _db;
 
-  UsersRepositoryImpl([UsersRepository? db])
-    : _db = db ?? UsersRepositoryImpl();
+  UsersRepositoryImpl([UsersDatasource? db])
+    : _db = db ?? UsersDatasourceImpl();
 
   @override
   Future<List<User>> getAllUsers() {
@@ -20,5 +22,10 @@ class UsersRepositoryImpl implements UsersRepository {
   @override
   Future<User?> getUserById(String username) {
     return _db.getUserById(username);
+  }
+
+  @override
+  Future<User?> updateUser(User user) {
+    return _db.updateUser(user);
   }
 }

@@ -4,4 +4,5 @@ abstract class UsersRepository {
   Future<List<User>> getAllUsers();
   Future<User?> getUserById(String username);
   Future<List<User>?> getFollwedByUserUsingId(String username);
+  Future<User?> updateUser(User user);
 }

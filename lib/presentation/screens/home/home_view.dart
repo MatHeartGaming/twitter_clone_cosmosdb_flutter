@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/presentation/providers/posts_repository/load_posts_provider.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -14,8 +15,17 @@ class HomeView extends ConsumerStatefulWidget {
 
 class HomeViewState extends ConsumerState<HomeView> {
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      await ref.read(loadPostsProvider.notifier).fetchAllPosts();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final allPosts = ref.watch(loadPostsProvider);
     return SafeArea(
       child: Scaffold(
         floatingActionButton: addPostFab(),
@@ -31,11 +41,15 @@ class HomeViewState extends ConsumerState<HomeView> {
           ),
         ),
         body: ListView.builder(
-          itemCount: 10,
+          itemCount: allPosts.allPosts.length,
           prototypeItem: PostWidget(post: Post.empty()),
           itemBuilder: (context, index) {
+            final post = allPosts.allPosts[index];
             return PostWidget(
-              post: Post(userId: 'MatBuompy', body: 'This is an example Post $index'),
+              post: Post(
+                userId: post.userId,
+                body: post.body,
+              ),
             );
           },
         ),

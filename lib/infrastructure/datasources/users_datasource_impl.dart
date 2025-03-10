@@ -41,4 +41,21 @@ class UsersDatasourceImpl implements UsersDatasource {
     );
     return follwed.toList();
   }
+
+  @override
+Future<User?> updateUser(User user) async {
+  var rng = Random();
+  int randomTime = rng.nextInt(300);
+
+  return await Future.delayed(Duration(milliseconds: randomTime), () {
+    final indexFound = users.indexWhere((u) => u.username == user.username);
+    if (indexFound != -1) {
+      users[indexFound] = user;
+      return user;
+    }
+    return null;
+  });
+}
+
+
 }
