@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
@@ -40,6 +41,7 @@ class PostWidget extends ConsumerWidget {
                 ),
               ),
             ),
+          _InteractionsRow(),
         ],
       ),
     );
@@ -63,6 +65,43 @@ class _UserPostRow extends StatelessWidget {
         Text(
           '@${user.username}',
           style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
+        ),
+      ],
+    );
+  }
+}
+
+class _InteractionsRow extends StatelessWidget {
+  const _InteractionsRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(FontAwesomeIcons.comment, color: Colors.grey, size: 15),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(FontAwesomeIcons.retweet, color: Colors.grey, size: 15),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(FontAwesomeIcons.heart, color: Colors.grey, size: 15),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(FontAwesomeIcons.chartSimple, color: Colors.grey, size: 15),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(FontAwesomeIcons.bookmark, color: Colors.grey, size: 15),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(Icons.share, color: Colors.grey, size: 15),
+          onPressed: () {},
         ),
       ],
     );
