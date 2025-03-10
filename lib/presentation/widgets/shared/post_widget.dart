@@ -10,9 +10,15 @@ import 'package:twitter_cosmos_db/presentation/widgets/shared/loading_default_wi
 
 class PostWidget extends ConsumerWidget {
   final Post post;
-  final Function onLikeTapped;
+  final VoidCallback onLikeTapped;
+  final VoidCallback onImageTapped;
 
-  const PostWidget({super.key, required this.post, required this.onLikeTapped});
+  const PostWidget({
+    super.key,
+    required this.post,
+    required this.onLikeTapped,
+    required this.onImageTapped,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,12 +45,15 @@ class PostWidget extends ConsumerWidget {
             if (post.isUrlImageValid)
               Visibility(
                 visible: post.isUrlImageValid,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: FadeInImage(
-                    placeholder: MemoryImage(kTransparentImage),
-                    fit: BoxFit.cover,
-                    image: NetworkImage(post.urlImage!),
+                child: GestureDetector(
+                  onTap: onImageTapped,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: FadeInImage(
+                      placeholder: MemoryImage(kTransparentImage),
+                      fit: BoxFit.cover,
+                      image: NetworkImage(post.urlImage!),
+                    ),
                   ),
                 ),
               ),
@@ -88,7 +97,7 @@ class _UserPostRow extends StatelessWidget {
 
 class _InteractionsRow extends StatelessWidget {
   final bool liked;
-  final Function onLikeTapped;
+  final VoidCallback onLikeTapped;
 
   const _InteractionsRow({required this.onLikeTapped, this.liked = false});
 
@@ -112,7 +121,7 @@ class _InteractionsRow extends StatelessWidget {
                     child: Icon(FontAwesomeIcons.solidHeart, color: Colors.red),
                   )
                   : Icon(FontAwesomeIcons.heart, color: Colors.grey, size: 15),
-          onPressed: () => onLikeTapped(),
+          onPressed: onLikeTapped,
         ),
         IconButton(
           icon: Icon(

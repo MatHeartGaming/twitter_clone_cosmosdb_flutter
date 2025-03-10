@@ -73,15 +73,15 @@ List<Post> tweets = [
   Post(
     id: '5',
     userId: 'FrancisPope', 
-    body: "Fermate la guerra"),
+    body: "Fermate la guerra", urlImage: 'https://maryknollogc.org/wp-content/uploads/2023/07/popefrancisukraine.png'),
   Post(
     id: '6',
     userId: 'MarioBros', 
-    body: "Wonder where peach's gone 🤔"),
+    body: "Wonder where peach's gone 🤔", urlImage: 'https://cdn.mos.cms.futurecdn.net/s9xuWCYogqnFjRisfDZwHf-1200-80.jpg'),
   Post(
     id: '7',
     userId: 'MarioBros', 
-    body: "Here with Luigi smashing the hell out of Bower! 👊"),
+    body: "Here with Luigi smashing the hell out of Bowser! 👊"),
   Post(
     id: '8',
     userId: 'FernandoH', 

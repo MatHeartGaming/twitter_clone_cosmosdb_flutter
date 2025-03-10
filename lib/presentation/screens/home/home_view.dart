@@ -56,6 +56,7 @@ class HomeViewState extends ConsumerState<HomeView> {
               final post = posts.allSignedInUserPosts[index];
               return PostWidget(
                 onLikeTapped: () => onLikeTappedAction(post, ref),
+                onImageTapped: () => onImageTapped(context, post.urlImage ?? ''),
                 post: post,
               );
             },

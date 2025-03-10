@@ -52,6 +52,8 @@ class CommunityViewState extends ConsumerState<CommunityView> {
               final post = posts.allPosts[index];
               return PostWidget(
                 onLikeTapped: () => onLikeTappedAction(post, ref),
+                onImageTapped:
+                    () => onImageTapped(context, post.urlImage ?? ''),
                 post: post,
               );
             },
