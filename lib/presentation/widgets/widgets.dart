@@ -15,3 +15,6 @@ export 'package:twitter_cosmos_db/presentation/widgets/shared/drawer_content.dar
 
 // Post
 export 'package:twitter_cosmos_db/presentation/widgets/shared/post_widget.dart';
+
+// Shared
+export 'package:twitter_cosmos_db/presentation/widgets/shared/loading_default_widget.dart';

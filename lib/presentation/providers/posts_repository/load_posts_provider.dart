@@ -22,20 +22,20 @@ class AllPostsNotifier extends StateNotifier<AllPostsState> {
       super(AllPostsState(allPosts: [], allSignedInUserPosts: []));
 
   Future<List<Post>> fetchAllPosts() async {
-    if (state.isLoading) return state.allPosts;
-    state = state.copyWith(isLoading: true);
+    if (state.isLoadingAllPosts) return state.allPosts;
+    state = state.copyWith(isLoadingAllPosts: true);
     final posts = await _postsRepository.getAllPosts();
-    state = state.copyWith(allPosts: posts, isLoading: false);
+    state = state.copyWith(allPosts: posts, isLoadingAllPosts: false);
     return state.allPosts;
   }
 
   Future<List<Post>> fetchAllSignedInuserPosts({
     String username = 'MatBuompy',
   }) async {
-    if (state.isLoading) return state.allSignedInUserPosts;
-    state = state.copyWith(isLoading: true);
+    if (state.isLoadingSignedInUserPosts) return state.allSignedInUserPosts;
+    state = state.copyWith(isLoadingSignedInUserPosts: true);
     final posts = await _postsRepository.getPostsByUserName(username);
-    state = state.copyWith(allSignedInUserPosts: posts, isLoading: false);
+    state = state.copyWith(allSignedInUserPosts: posts, isLoadingSignedInUserPosts: false);
     return state.allSignedInUserPosts;
   }
 
@@ -46,12 +46,14 @@ class AllPostsNotifier extends StateNotifier<AllPostsState> {
 }
 
 class AllPostsState {
-  final bool isLoading;
+  final bool isLoadingAllPosts;
+  final bool isLoadingSignedInUserPosts;
   final List<Post> allPosts;
   final List<Post> allSignedInUserPosts;
 
   AllPostsState({
-    this.isLoading = false,
+    this.isLoadingAllPosts = false,
+    this.isLoadingSignedInUserPosts = false,
     required this.allPosts,
     required this.allSignedInUserPosts,
   });
@@ -59,23 +61,31 @@ class AllPostsState {
   @override
   bool operator ==(covariant AllPostsState other) {
     if (identical(this, other)) return true;
-
-    return other.isLoading == isLoading &&
-        listEquals(other.allPosts, allPosts) &&
-        listEquals(other.allSignedInUserPosts, allSignedInUserPosts);
+  
+    return 
+      other.isLoadingAllPosts == isLoadingAllPosts &&
+      other.isLoadingSignedInUserPosts == isLoadingSignedInUserPosts &&
+      listEquals(other.allPosts, allPosts) &&
+      listEquals(other.allSignedInUserPosts, allSignedInUserPosts);
   }
 
   @override
-  int get hashCode =>
-      isLoading.hashCode ^ allPosts.hashCode ^ allSignedInUserPosts.hashCode;
+  int get hashCode {
+    return isLoadingAllPosts.hashCode ^
+      isLoadingSignedInUserPosts.hashCode ^
+      allPosts.hashCode ^
+      allSignedInUserPosts.hashCode;
+  }
 
   AllPostsState copyWith({
-    bool? isLoading,
+    bool? isLoadingAllPosts,
+    bool? isLoadingSignedInUserPosts,
     List<Post>? allPosts,
     List<Post>? allSignedInUserPosts,
   }) {
     return AllPostsState(
-      isLoading: isLoading ?? this.isLoading,
+      isLoadingAllPosts: isLoadingAllPosts ?? this.isLoadingAllPosts,
+      isLoadingSignedInUserPosts: isLoadingSignedInUserPosts ?? this.isLoadingSignedInUserPosts,
       allPosts: allPosts ?? this.allPosts,
       allSignedInUserPosts: allSignedInUserPosts ?? this.allSignedInUserPosts,
     );

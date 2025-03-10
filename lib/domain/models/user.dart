@@ -9,6 +9,7 @@ class User {
   final String username;
   final DateTime dateCreated;
   final String phoneNumber;
+  final String profileImageUrl;
   final List<String> followed;
   final List<String> postLiked;
   final List<String> posted;
@@ -19,6 +20,7 @@ class User {
     required this.username,
     required this.dateCreated,
     required this.phoneNumber,
+    required this.profileImageUrl,
     this.followed = const [],
     this.postLiked = const [],
     this.posted = const [],
@@ -30,12 +32,15 @@ class User {
     this.username = '',
     required this.dateCreated,
     this.phoneNumber = '',
+    this.profileImageUrl = '',
     this.followed = const [],
     this.postLiked = const [],
     this.posted = const [],
   });
 
   String get completeName => '$nome $cognome';
+
+  bool get isProfileUrlValid => profileImageUrl.isNotEmpty;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -47,6 +52,7 @@ class User {
       'followed': followed,
       'postLiked': postLiked,
       'posted': posted,
+      'profileImageUrl': profileImageUrl,
     };
   }
 
@@ -55,8 +61,11 @@ class User {
       nome: map['nome'] as String,
       cognome: map['cognome'] as String,
       username: map['username'] as String,
-      dateCreated: DateTime.fromMillisecondsSinceEpoch(map['dateCreated'] as int),
+      dateCreated: DateTime.fromMillisecondsSinceEpoch(
+        map['dateCreated'] as int,
+      ),
       phoneNumber: map['phoneNumber'] as String,
+      profileImageUrl: map['profileImageUrl'],
       followed: List<String>.from(map['followed'] as List<String>),
       postLiked: List<String>.from(map['postLiked'] as List<String>),
       posted: List<String>.from(map['posted'] as List<String>),
@@ -65,7 +74,8 @@ class User {
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory User.fromJson(String source) =>
+      User.fromMap(json.decode(source) as Map<String, dynamic>);
 
   User copyWith({
     String? nome,
@@ -73,6 +83,7 @@ class User {
     String? username,
     DateTime? dateCreated,
     String? phoneNumber,
+    String? profileImageUrl,
     List<String>? followed,
     List<String>? postLiked,
     List<String>? posted,
@@ -83,6 +94,7 @@ class User {
       username: username ?? this.username,
       dateCreated: dateCreated ?? this.dateCreated,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       followed: followed ?? this.followed,
       postLiked: postLiked ?? this.postLiked,
       posted: posted ?? this.posted,
@@ -92,27 +104,26 @@ class User {
   @override
   bool operator ==(covariant User other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.nome == nome &&
-      other.cognome == cognome &&
-      other.username == username &&
-      other.dateCreated == dateCreated &&
-      other.phoneNumber == phoneNumber &&
-      listEquals(other.followed, followed) &&
-      listEquals(other.postLiked, postLiked) &&
-      listEquals(other.posted, posted);
+
+    return other.nome == nome &&
+        other.cognome == cognome &&
+        other.username == username &&
+        other.dateCreated == dateCreated &&
+        other.phoneNumber == phoneNumber &&
+        listEquals(other.followed, followed) &&
+        listEquals(other.postLiked, postLiked) &&
+        listEquals(other.posted, posted);
   }
 
   @override
   int get hashCode {
     return nome.hashCode ^
-      cognome.hashCode ^
-      username.hashCode ^
-      dateCreated.hashCode ^
-      phoneNumber.hashCode ^
-      followed.hashCode ^
-      postLiked.hashCode ^
-      posted.hashCode;
+        cognome.hashCode ^
+        username.hashCode ^
+        dateCreated.hashCode ^
+        phoneNumber.hashCode ^
+        followed.hashCode ^
+        postLiked.hashCode ^
+        posted.hashCode;
   }
 }

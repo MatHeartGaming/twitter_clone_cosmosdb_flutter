@@ -1,18 +1,23 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/shared/circle_picture.dart';
+import 'package:twitter_cosmos_db/presentation/widgets/shared/loading_default_widget.dart';
 
 class PostWidget extends ConsumerWidget {
   final Post post;
+  final Function onLikeTapped;
 
-  const PostWidget({super.key, required this.post});
+  const PostWidget({super.key, required this.post, required this.onLikeTapped});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userAsync = ref.watch(getUserByIdFutureProvider(post.userId));
+    final signedInUser = ref.watch(signedInUserProvider);
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 0,
@@ -22,13 +27,13 @@ class PostWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _UserPostRow(
-              User.empty(
-                dateCreated: DateTime.now(),
-                username: 'MatBuompy',
-                nome: 'Matteo',
-                cognome: 'Buompastore',
-              ),
+            userAsync.when(
+              data:
+                  (user) => _UserPostRow(
+                    user ?? User.empty(dateCreated: DateTime.now()),
+                  ),
+              loading: () => LoadingDefaultWidget(),
+              error: (error, stackTrace) => Text(error.toString()),
             ),
             Text(post.body),
             if (post.isUrlImageValid)
@@ -43,7 +48,10 @@ class PostWidget extends ConsumerWidget {
                   ),
                 ),
               ),
-            _InteractionsRow(),
+            _InteractionsRow(
+              onLikeTapped: onLikeTapped,
+              liked: signedInUser?.postLiked.contains(post.id) ?? false,
+            ),
           ],
         ),
       ),
@@ -61,7 +69,11 @@ class _UserPostRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        CirclePicture(urlPicture: profilePic, minRadius: 10, maxRadius: 18),
+        CirclePicture(
+          urlPicture: user.profileImageUrl,
+          minRadius: 10,
+          maxRadius: 18,
+        ),
         SizedBox(width: 10),
         Text(user.completeName, style: TextStyle(fontWeight: FontWeight.w700)),
         SizedBox(width: 5),
@@ -75,7 +87,10 @@ class _UserPostRow extends StatelessWidget {
 }
 
 class _InteractionsRow extends StatelessWidget {
-  const _InteractionsRow();
+  final bool liked;
+  final Function onLikeTapped;
+
+  const _InteractionsRow({required this.onLikeTapped, this.liked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +106,20 @@ class _InteractionsRow extends StatelessWidget {
           onPressed: () {},
         ),
         IconButton(
-          icon: Icon(FontAwesomeIcons.heart, color: Colors.grey, size: 15),
-          onPressed: () {},
+          icon:
+              liked
+                  ? BounceIn(
+                    child: Icon(FontAwesomeIcons.solidHeart, color: Colors.red),
+                  )
+                  : Icon(FontAwesomeIcons.heart, color: Colors.grey, size: 15),
+          onPressed: () => onLikeTapped(),
         ),
         IconButton(
-          icon: Icon(FontAwesomeIcons.chartSimple, color: Colors.grey, size: 15),
+          icon: Icon(
+            FontAwesomeIcons.chartSimple,
+            color: Colors.grey,
+            size: 15,
+          ),
           onPressed: () {},
         ),
         IconButton(

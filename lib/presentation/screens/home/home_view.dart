@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/presentation/common_functions/common_functions.dart';
 import 'package:twitter_cosmos_db/presentation/providers/posts_repository/load_posts_provider.dart';
+import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -17,15 +18,21 @@ class HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     super.initState();
+    _loadData();
+  }
+
+  Future _loadData() async {
     Future.delayed(Duration.zero, () async {
-      await ref.read(loadPostsProvider.notifier).fetchAllPosts();
+      await ref
+          .read(loadPostsProvider.notifier)
+          .fetchAllSignedInuserPosts(username: 'FernandoH');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final allPosts = ref.watch(loadPostsProvider);
+    final posts = ref.watch(loadPostsProvider);
     return SafeArea(
       child: Scaffold(
         floatingActionButton: addPostFab(),
@@ -40,18 +47,19 @@ class HomeViewState extends ConsumerState<HomeView> {
             ),
           ),
         ),
-        body: ListView.builder(
-          itemCount: allPosts.allPosts.length,
-          prototypeItem: PostWidget(post: Post.empty()),
-          itemBuilder: (context, index) {
-            final post = allPosts.allPosts[index];
-            return PostWidget(
-              post: Post(
-                userId: post.userId,
-                body: post.body,
-              ),
-            );
-          },
+        body: RefreshIndicator(
+          onRefresh: () => _loadData(),
+          child: ListView.builder(
+            itemCount: posts.allSignedInUserPosts.length,
+            //prototypeItem: PostWidget(post: Post.empty()),
+            itemBuilder: (context, index) {
+              final post = posts.allSignedInUserPosts[index];
+              return PostWidget(
+                onLikeTapped: () => onLikeTappedAction(post, ref),
+                post: post,
+              );
+            },
+          ),
         ),
       ),
     );
