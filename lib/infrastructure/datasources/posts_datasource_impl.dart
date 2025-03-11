@@ -26,6 +26,17 @@ class PostsDatasourceImpl implements PostsDatasource {
   }
 
   @override
+  Future<Post?> createPost(Post post) async {
+    var rng = Random();
+    int randomTime = rng.nextInt(300);
+
+    return await Future.delayed(Duration(milliseconds: randomTime), () {
+      tweets.add(post);
+      return post;
+    });
+  }
+
+  @override
   Future<Post?> updatePost(Post post) async {
     var rng = Random();
     int randomTime = rng.nextInt(300);

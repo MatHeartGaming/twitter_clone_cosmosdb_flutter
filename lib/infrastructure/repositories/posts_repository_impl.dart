@@ -23,4 +23,9 @@ class PostsRepositoryImpl implements PostsRepository {
   Future<Post?> updatePost(Post post) {
     return _db.updatePost(post);
   }
+
+  @override
+  Future<Post?> createPost(Post post) {
+    return _db.createPost(post);
+  }
 }
