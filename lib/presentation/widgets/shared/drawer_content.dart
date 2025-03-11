@@ -3,8 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/presentation/navigation/navigation_functions.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/shared/circle_picture.dart';
 
@@ -15,44 +15,60 @@ class DrawerContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final signedInUser = ref.watch(signedInUserProvider);
     final isDarkMode = ref.watch(isDarkModeProvider);
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DrawerHeader(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          signedInUser == null
+              ? SafeArea(
+                child: ZoomIn(
+                  child: TextButton(
+                    onPressed: () => pushToLoginSignupScreen(context),
+                    child: Text('login_text').tr(),
+                  ),
+                ),
+              )
+              : DrawerHeader(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CirclePicture(
-                      urlPicture: profilePic,
-                      minRadius: 20,
-                      maxRadius: 20,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CirclePicture(
+                          urlPicture:
+                              user.isProfileUrlValid
+                                  ? user.profileImageUrl
+                                  : '',
+                          minRadius: 20,
+                          maxRadius: 20,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(FontAwesomeIcons.gears),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(FontAwesomeIcons.gears),
+                    Text(
+                      user.completeName,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    Text(
+                      user.username,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      'drawer_following_count',
+                    ).tr(args: ['${user.followed.length}']),
                   ],
                 ),
-                Text(
-                  user.completeName,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  user.username,
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                ),
-                Text(
-                  'drawer_following_count',
-                ).tr(args: ['${user.followed.length}']),
-              ],
-            ),
-          ),
+              ),
 
           // Expanding the list of menu items to push the toggle button to the bottom
           Expanded(
@@ -61,13 +77,15 @@ class DrawerContent extends ConsumerWidget {
               children:
                   _getMenuItems().entries
                       .map(
-                        (item) => ListTile(
-                          leading: Icon(item.value),
-                          title: Text(
-                            item.key,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                        (item) => SlideInLeft(
+                          child: ListTile(
+                            leading: Icon(item.value),
+                            title: Text(
+                              item.key,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),

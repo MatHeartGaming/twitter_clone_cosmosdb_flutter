@@ -7,6 +7,7 @@ class User {
   final String nome;
   final String cognome;
   final String username;
+  final String email;
   final DateTime dateCreated;
   final String phoneNumber;
   final String profileImageUrl;
@@ -21,6 +22,7 @@ class User {
     required this.dateCreated,
     required this.phoneNumber,
     required this.profileImageUrl,
+    required this.email,
     this.followed = const [],
     this.postLiked = const [],
     this.posted = const [],
@@ -32,6 +34,7 @@ class User {
     this.username = '',
     required this.dateCreated,
     this.phoneNumber = '',
+    this.email = '',
     this.profileImageUrl = '',
     this.followed = const [],
     this.postLiked = const [],
@@ -47,6 +50,7 @@ class User {
       'nome': nome,
       'cognome': cognome,
       'username': username,
+      'email': email,
       'dateCreated': dateCreated,
       'phoneNumber': phoneNumber,
       'followed': followed,
@@ -61,6 +65,7 @@ class User {
       nome: map['nome'] as String,
       cognome: map['cognome'] as String,
       username: map['username'] as String,
+      email: map['email'] as String,
       dateCreated: DateTime.fromMillisecondsSinceEpoch(
         map['dateCreated'] as int,
       ),
@@ -81,6 +86,7 @@ class User {
     String? nome,
     String? cognome,
     String? username,
+    String? email,
     DateTime? dateCreated,
     String? phoneNumber,
     String? profileImageUrl,
@@ -92,6 +98,7 @@ class User {
       nome: nome ?? this.nome,
       cognome: cognome ?? this.cognome,
       username: username ?? this.username,
+      email: email ?? this.email,
       dateCreated: dateCreated ?? this.dateCreated,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
@@ -104,26 +111,31 @@ class User {
   @override
   bool operator ==(covariant User other) {
     if (identical(this, other)) return true;
-
-    return other.nome == nome &&
-        other.cognome == cognome &&
-        other.username == username &&
-        other.dateCreated == dateCreated &&
-        other.phoneNumber == phoneNumber &&
-        listEquals(other.followed, followed) &&
-        listEquals(other.postLiked, postLiked) &&
-        listEquals(other.posted, posted);
+  
+    return 
+      other.nome == nome &&
+      other.cognome == cognome &&
+      other.username == username &&
+      other.email == email &&
+      other.dateCreated == dateCreated &&
+      other.phoneNumber == phoneNumber &&
+      other.profileImageUrl == profileImageUrl &&
+      listEquals(other.followed, followed) &&
+      listEquals(other.postLiked, postLiked) &&
+      listEquals(other.posted, posted);
   }
 
   @override
   int get hashCode {
     return nome.hashCode ^
-        cognome.hashCode ^
-        username.hashCode ^
-        dateCreated.hashCode ^
-        phoneNumber.hashCode ^
-        followed.hashCode ^
-        postLiked.hashCode ^
-        posted.hashCode;
+      cognome.hashCode ^
+      username.hashCode ^
+      email.hashCode ^
+      dateCreated.hashCode ^
+      phoneNumber.hashCode ^
+      profileImageUrl.hashCode ^
+      followed.hashCode ^
+      postLiked.hashCode ^
+      posted.hashCode;
   }
 }

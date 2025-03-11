@@ -8,6 +8,7 @@ const String isDarkTheme = "dark_theme";
 const String basePath = '/';
 const String homePath = '/home';
 const String loadingPath = '/loading';
+const String loginPath = '/login-signup';
 
 // Images
 final String profilePic =

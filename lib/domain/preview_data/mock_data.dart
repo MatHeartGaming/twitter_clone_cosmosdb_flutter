@@ -3,6 +3,7 @@ import 'package:twitter_cosmos_db/domain/models/models.dart';
 
 List<User> users = [
   User(
+    email: 'matb@gmail.com',
     username: 'MatBuompy',
     nome: "Matteo",
     cognome: "Buompastore",
@@ -12,6 +13,7 @@ List<User> users = [
     profileImageUrl: profilePic,
   ),
   User(
+    email: 'trumpolino@gmail.com',
     username: 'TrumpOfficial✔️',
     nome: "Donald",
     cognome: "Trump",
@@ -21,6 +23,7 @@ List<User> users = [
     profileImageUrl: 'https://i.abcnewsfe.com/a/404d254e-7d93-406b-addb-af88686e8e64/trump-france-macron-ap-lv-250214_1740446568606_hpMain.jpg',
   ),
   User(
+    email: 'francisPope@gmail.com',
     username: 'FrancisPope',
     nome: "Papa",
     cognome: "Francesco",
@@ -30,6 +33,7 @@ List<User> users = [
     profileImageUrl: 'https://s.france24.com/media/display/bd303ccc-f536-11ef-8502-005056bfb2b6/w:1280/p:16x9/000_36YN9RM.jpg',
   ),
   User(
+    email: 'mariobros@gmail.com',
     username: 'MarioBros',
     nome: "Mario",
     cognome: "Rossi",
@@ -39,6 +43,7 @@ List<User> users = [
     profileImageUrl: 'https://game-experience.it/wp-content/uploads/2023/05/super-mario-1024x576.jpeg',
   ),
   User(
+    email: 'fernandoherrera@gmail.com',
     username: 'FernandoH',
     nome: "Fernando",
     cognome: "Herrera",

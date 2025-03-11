@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -30,6 +31,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final signedInUser = ref.watch(signedInUserProvider);
     List<Widget> viewRoutes = [
       widget.homeView,
       widget.searchView,
@@ -40,12 +42,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       drawerEnableOpenDragGesture: true,
       drawer: DrawerContent(
-        user: User.empty(
-          nome: 'Matteo',
-          cognome: 'Buompastore',
-          username: '@MatBuompy',
-          dateCreated: DateTime.now(),
-        ),
+        user: signedInUser ?? User.empty(dateCreated: DateTime.now()),
       ),
       body: IndexedStack(index: widget.pageIndex, children: viewRoutes),
       bottomNavigationBar: CustomBottomNavigationBar(
