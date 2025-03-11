@@ -28,4 +28,14 @@ class UsersRepositoryImpl implements UsersRepository {
   Future<User?> updateUser(User user) {
     return _db.updateUser(user);
   }
+
+  @override
+  Future<User?> createNewUser(User user) {
+    return _db.createNewUser(user);
+  }
+
+  @override
+  Future<List<User?>> searchUsersById(String username) {
+    return _db.searchUsersById(username);
+  }
 }

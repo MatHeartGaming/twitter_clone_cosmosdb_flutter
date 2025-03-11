@@ -43,19 +43,40 @@ class UsersDatasourceImpl implements UsersDatasource {
   }
 
   @override
-Future<User?> updateUser(User user) async {
-  var rng = Random();
-  int randomTime = rng.nextInt(300);
+  Future<User?> updateUser(User user) async {
+    var rng = Random();
+    int randomTime = rng.nextInt(300);
 
-  return await Future.delayed(Duration(milliseconds: randomTime), () {
-    final indexFound = users.indexWhere((u) => u.username == user.username);
-    if (indexFound != -1) {
-      users[indexFound] = user;
+    return await Future.delayed(Duration(milliseconds: randomTime), () {
+      final indexFound = users.indexWhere((u) => u.username == user.username);
+      if (indexFound != -1) {
+        users[indexFound] = user;
+        return user;
+      }
+      return null;
+    });
+  }
+
+  @override
+  Future<User?> createNewUser(User user) {
+    var rng = Random();
+    int randomTime = rng.nextInt(300);
+    return Future.delayed(Duration(milliseconds: randomTime), () {
+      users.add(user);
       return user;
-    }
-    return null;
-  });
-}
+    });
+  }
 
-
+  @override
+  Future<List<User?>> searchUsersById(String username) {
+    var rng = Random();
+    int randomTime = rng.nextInt(300);
+    return Future.delayed(Duration(milliseconds: randomTime), () {
+      final usersList = users.where(
+        (element) =>
+            element.username.toLowerCase().contains(username.trim().toLowerCase()),
+      );
+      return usersList.toList();
+    });
+  }
 }
