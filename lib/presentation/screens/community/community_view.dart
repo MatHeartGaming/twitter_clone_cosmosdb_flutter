@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_cosmos_db/presentation/common_functions/common_functions.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
+import 'package:twitter_cosmos_db/presentation/screens/screens.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
 class CommunityView extends ConsumerStatefulWidget {
@@ -30,9 +31,13 @@ class CommunityViewState extends ConsumerState<CommunityView> {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final posts = ref.watch(loadPostsProvider);
+    final signedInUser = ref.watch(signedInUserProvider);
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: addPostFab(),
+        floatingActionButton:
+            signedInUser != null
+                ? addPostFab(onPressed: () => _showAddPostSheet())
+                : null,
         appBar: PreferredSize(
           preferredSize: Size(size.width, 50),
           child: Padding(
@@ -63,15 +68,7 @@ class CommunityViewState extends ConsumerState<CommunityView> {
     );
   }
 
-  Widget addPostFab() {
-    return IconButton(
-      onPressed: () {},
-      icon: Icon(Icons.add),
-      color: Colors.white,
-      style: const ButtonStyle().copyWith(
-        backgroundColor: WidgetStatePropertyAll(Colors.blue),
-        minimumSize: WidgetStatePropertyAll(Size(50, 50)),
-      ),
-    );
+  void _showAddPostSheet() {
+    showCustomBottomSheet(context, child: AddPostScreen());
   }
 }

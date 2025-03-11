@@ -19,6 +19,10 @@ export 'package:twitter_cosmos_db/presentation/widgets/shared/post_widget.dart';
 // Shared
 export 'package:twitter_cosmos_db/presentation/widgets/shared/loading_default_widget.dart';
 export 'package:twitter_cosmos_db/presentation/widgets/shared/general_icon_widgets.dart';
+export 'package:twitter_cosmos_db/presentation/widgets/shared/stacked_icons_on_widgets.dart';
+export 'package:twitter_cosmos_db/presentation/widgets/shared/widget_characteristics.dart';
+export 'package:twitter_cosmos_db/presentation/widgets/shared/custom_bottom_sheets.dart';
+export 'package:twitter_cosmos_db/presentation/widgets/shared/buttons.dart';
 
 // Inputs
 export 'package:twitter_cosmos_db/presentation/widgets/inputs/custom_input_form_field.dart';

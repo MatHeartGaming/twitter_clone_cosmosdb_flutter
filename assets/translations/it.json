@@ -1,5 +1,5 @@
 {   
-    "app_name": "Ginevra Distribuzioni",
+    "app_name": "CosmosDB Twitter",
 
     "loading_screen_loading_and_redirecting_txt": "Caricamento e reindirizzamento...",
     "loading_screen_please_wait_txt": "Per favore, aspetta qualche momento",
@@ -29,6 +29,9 @@
     "login_screen_email_too_many_attempts_snackbar": "Troppi tentativi. Attendere qualche minuto prima di riprovare.",
     "login_screen_or_login_with_text": "Oppure accedi con",
     "login_screen_password_mismatch_snackbar_text": "Le password devono essere identiche!",
+
+    "post_tweet_screen_field_placeholder": "Tweetta",
+    "post_tweet_screen_upload_btn_txt": "Carica Tweet {}",
 
     "verify_email_screen_app_bar_title": "Verifica Indirizzo Email",
     "verify_email_screen_verification_email_sent_text": "Abbiamo inviato una email all'indirizzo: ",
@@ -74,7 +77,7 @@
     "nav_bar_search_item": "Cerca",
     "nav_bar_search_tooltip": "Cerca",
     "nav_bar_community_item": "Comunità",
-    "nav_bar_community_tooltip": "Feed dalla comunirà",
+    "nav_bar_community_tooltip": "Feed dalla comunità",
 
     "drawer_following_count": "{} seguiti",
     "drawer_profile_item": "Profilo",
@@ -84,6 +87,10 @@
     "drawer_lists_item": "Liste",
     "drawer_spaces_item": "Spazi",
     "drawer_monetization_item": "Monetizzazione",
+
+    "modal_bottom_photo_choose_from": "Scegli da:",
+    "modal_bottom_photo_gallery": "Galleria",
+    "modal_bottom_photo_camera": "Scatta foto",
 
     "go_to_home_page_tooltip_text": "Vai alla Home",
     "admin_text": "Admin: {}",

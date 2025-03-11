@@ -8,3 +8,6 @@ export 'package:twitter_cosmos_db/presentation/screens/community/community_view.
 export 'package:twitter_cosmos_db/presentation/screens/login/login_screen.dart';
 export 'package:twitter_cosmos_db/presentation/screens/login/login_signup_view.dart';
 export 'package:twitter_cosmos_db/presentation/screens/login/signup_screen.dart';
+
+// Add Posts
+export 'package:twitter_cosmos_db/presentation/screens/add_post/add_post_screen.dart';

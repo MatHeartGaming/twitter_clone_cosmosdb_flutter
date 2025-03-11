@@ -1,8 +1,10 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_cosmos_db/presentation/common_functions/common_functions.dart';
 import 'package:twitter_cosmos_db/presentation/providers/posts_repository/load_posts_provider.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
+import 'package:twitter_cosmos_db/presentation/screens/screens.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -33,9 +35,13 @@ class HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final posts = ref.watch(loadPostsProvider);
+    final signedInUser = ref.watch(signedInUserProvider);
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: addPostFab(),
+        floatingActionButton:
+            signedInUser != null
+                ? addPostFab(onPressed: () => _showAddPostSheet())
+                : null,
         appBar: PreferredSize(
           preferredSize: Size(size.width, 50),
           child: Padding(
@@ -56,7 +62,8 @@ class HomeViewState extends ConsumerState<HomeView> {
               final post = posts.allSignedInUserPosts[index];
               return PostWidget(
                 onLikeTapped: () => onLikeTappedAction(post, ref),
-                onImageTapped: () => onImageTapped(context, post.urlImage ?? ''),
+                onImageTapped:
+                    () => onImageTapped(context, post.urlImage ?? ''),
                 post: post,
               );
             },
@@ -66,15 +73,7 @@ class HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget addPostFab() {
-    return IconButton(
-      onPressed: () {},
-      icon: Icon(Icons.add),
-      color: Colors.white,
-      style: const ButtonStyle().copyWith(
-        backgroundColor: WidgetStatePropertyAll(Colors.blue),
-        minimumSize: WidgetStatePropertyAll(Size(50, 50)),
-      ),
-    );
+  void _showAddPostSheet() {
+    showCustomBottomSheet(context, child: AddPostScreen());
   }
 }

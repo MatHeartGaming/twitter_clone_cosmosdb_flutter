@@ -35,13 +35,27 @@ class AllPostsNotifier extends StateNotifier<AllPostsState> {
     if (state.isLoadingSignedInUserPosts) return state.allSignedInUserPosts;
     state = state.copyWith(isLoadingSignedInUserPosts: true);
     final posts = await _postsRepository.getPostsByUserName(username);
-    state = state.copyWith(allSignedInUserPosts: posts, isLoadingSignedInUserPosts: false);
+    state = state.copyWith(
+      allSignedInUserPosts: posts,
+      isLoadingSignedInUserPosts: false,
+    );
     return state.allSignedInUserPosts;
   }
 
   Future<Post?> updatePost(Post post) async {
     final updatedPost = await _postsRepository.updatePost(post);
     return updatedPost;
+  }
+
+  Future<Post?> addPost(Post post) async {
+    final addedPost = await _postsRepository.createPost(post);
+    if (addedPost != null) {
+      state = state.copyWith(
+        allPosts: [...state.allPosts, addedPost],
+        allSignedInUserPosts: [...state.allSignedInUserPosts, addedPost],
+      );
+    }
+    return addedPost;
   }
 }
 
@@ -61,20 +75,19 @@ class AllPostsState {
   @override
   bool operator ==(covariant AllPostsState other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.isLoadingAllPosts == isLoadingAllPosts &&
-      other.isLoadingSignedInUserPosts == isLoadingSignedInUserPosts &&
-      listEquals(other.allPosts, allPosts) &&
-      listEquals(other.allSignedInUserPosts, allSignedInUserPosts);
+
+    return other.isLoadingAllPosts == isLoadingAllPosts &&
+        other.isLoadingSignedInUserPosts == isLoadingSignedInUserPosts &&
+        listEquals(other.allPosts, allPosts) &&
+        listEquals(other.allSignedInUserPosts, allSignedInUserPosts);
   }
 
   @override
   int get hashCode {
     return isLoadingAllPosts.hashCode ^
-      isLoadingSignedInUserPosts.hashCode ^
-      allPosts.hashCode ^
-      allSignedInUserPosts.hashCode;
+        isLoadingSignedInUserPosts.hashCode ^
+        allPosts.hashCode ^
+        allSignedInUserPosts.hashCode;
   }
 
   AllPostsState copyWith({
@@ -85,7 +98,8 @@ class AllPostsState {
   }) {
     return AllPostsState(
       isLoadingAllPosts: isLoadingAllPosts ?? this.isLoadingAllPosts,
-      isLoadingSignedInUserPosts: isLoadingSignedInUserPosts ?? this.isLoadingSignedInUserPosts,
+      isLoadingSignedInUserPosts:
+          isLoadingSignedInUserPosts ?? this.isLoadingSignedInUserPosts,
       allPosts: allPosts ?? this.allPosts,
       allSignedInUserPosts: allSignedInUserPosts ?? this.allSignedInUserPosts,
     );
