@@ -32,6 +32,8 @@
 
     "post_tweet_screen_field_placeholder": "Tweetta",
     "post_tweet_screen_upload_btn_txt": "Carica Tweet {}",
+    "post_tweet_screen_upload_success_snackbar_txt": "Post caricato con successo!",
+    "post_tweet_screen_upload_error_snackbar_txt": "Errore durante il caricamento del post",
 
     "verify_email_screen_app_bar_title": "Verifica Indirizzo Email",
     "verify_email_screen_verification_email_sent_text": "Abbiamo inviato una email all'indirizzo: ",
