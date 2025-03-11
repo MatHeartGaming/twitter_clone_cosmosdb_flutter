@@ -76,12 +76,15 @@ class UsersDatasourceImpl implements UsersDatasource {
   }
 
   @override
-  Future<List<User?>> searchUsersById(String username) {
+  Future<List<User>> searchUsersById(String username) {
     var rng = Random();
     int randomTime = rng.nextInt(300);
     return Future.delayed(Duration(milliseconds: randomTime), () {
+      if (username.isEmpty) return [];
       final usersList = users.where(
-        (element) => element.username.toLowerCase().contains(
+        (u) => u.username.toLowerCase().contains(
+          username.trim().toLowerCase(),
+        ) || u.completeName.toLowerCase().contains(
           username.trim().toLowerCase(),
         ),
       );

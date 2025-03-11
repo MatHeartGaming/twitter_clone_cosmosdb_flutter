@@ -38,3 +38,4 @@ export 'package:twitter_cosmos_db/presentation/providers/auth/auth_status_provid
 
 // Utility
 export 'package:twitter_cosmos_db/presentation/providers/utility/image_picker_provider.dart';
+export 'package:twitter_cosmos_db/presentation/providers/search_bars/products_list_screen_search_bar_provider.dart';

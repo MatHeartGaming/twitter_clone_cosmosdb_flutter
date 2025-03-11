@@ -1,8 +1,6 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_cosmos_db/presentation/common_functions/common_functions.dart';
-import 'package:twitter_cosmos_db/presentation/providers/posts_repository/load_posts_provider.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/screens/screens.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';

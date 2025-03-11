@@ -35,7 +35,7 @@ class UsersRepositoryImpl implements UsersRepository {
   }
 
   @override
-  Future<List<User?>> searchUsersById(String username) {
+  Future<List<User>> searchUsersById(String username) {
     return _db.searchUsersById(username);
   }
 }
