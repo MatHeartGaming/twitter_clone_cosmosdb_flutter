@@ -62,7 +62,15 @@ class UsersDatasourceImpl implements UsersDatasource {
     var rng = Random();
     int randomTime = rng.nextInt(300);
     return Future.delayed(Duration(milliseconds: randomTime), () {
-      users.add(user);
+      final indexFound = users.indexWhere(
+        (element) =>
+            element.username == user.username || element.email == user.email,
+      );
+      if (indexFound == -1) {
+        users.add(user);
+      } else {
+        return null;
+      }
       return user;
     });
   }
@@ -73,8 +81,9 @@ class UsersDatasourceImpl implements UsersDatasource {
     int randomTime = rng.nextInt(300);
     return Future.delayed(Duration(milliseconds: randomTime), () {
       final usersList = users.where(
-        (element) =>
-            element.username.toLowerCase().contains(username.trim().toLowerCase()),
+        (element) => element.username.toLowerCase().contains(
+          username.trim().toLowerCase(),
+        ),
       );
       return usersList.toList();
     });

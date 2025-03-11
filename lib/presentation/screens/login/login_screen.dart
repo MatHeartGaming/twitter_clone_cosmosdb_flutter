@@ -65,20 +65,6 @@ class LoginScreen extends ConsumerWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    /*CustomTextFormField(
-                      initialValue: "",
-                      label: "login_screen_vat_number_text".tr(),
-                      formatter: FormInputFormatters.digits,
-                      errorMessage: null,
-                      icon: FontAwesomeIcons.fileInvoiceDollar,
-                      onChanged: (newValue) {
-                        //final loginFormState = ref.read(loginSignupFormProvider.notifier);
-                        //loginFormState.emailChanged(newValue);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),*/
                     CustomTextFormField(
                       initialValue: "",
                       autoFillHints: const [AutofillHints.newPassword],
@@ -178,51 +164,7 @@ class LoginScreen extends ConsumerWidget {
     final loginFormNotifier = ref.read(loginFormProvider.notifier);
     final loginFormState = ref.read(loginFormProvider);
     final authStatusNotifier = ref.read(authStatusProvider.notifier);
-    /*final userRepository = ref.read(userRepositoryProvider);
-    final colors = Theme.of(ref.context).colorScheme;
-    loginFormNotifier.onSubmit(
-      onSubmit: () async {
-        await authStatusNotifier.loginUsingPassword(
-            loginFormState.email.value, loginFormState.password.value,
-            onInvalidCredentials: () {
-          showCustomSnackbar(ref.context,
-              'login_screen_email_invalid_credentials_snackbar'.tr(),
-              backgroundColor: colors.error);
-        }, onUnkownError: () {
-          showCustomSnackbar(
-              ref.context, 'login_screen_email_unexpected_error_snackbar'.tr(),
-              backgroundColor: colors.error);
-        }, onTooManyAttempts: () {
-          showCustomSnackbar(
-              ref.context, 'login_screen_email_too_many_attempts_snackbar'.tr(),
-              backgroundColor: colors.error);
-        }).then(
-          (userCredential) async {
-            if (userCredential == null) {
-              if (ref.context.mounted) {
-                showCustomSnackbar(
-                    ref.context, "Errore durante l'accesso. Riprovare.",
-                    backgroundColor: colors.error);
-              }
-              return;
-            }
-
-            await userRepository
-                .getUserByEmail(email: loginFormState.email.value)
-                .then(
-              (user) {
-                if (user != null) {
-                  _updateSignedInUserProvider(ref, user);
-                }
-                if (!ref.context.mounted) return;
-                ref.context.pop();
-                logger.i('Login with Password! $user');
-              },
-            );
-          },
-        );
-      },
-    );*/
+    
   }
 
   Future<void>? _submitFormAction(AuthState authStatusNotifier, WidgetRef ref) {

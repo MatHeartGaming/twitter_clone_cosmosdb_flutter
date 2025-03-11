@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
 import 'package:twitter_cosmos_db/domain/inputs_validations/inputs.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
@@ -9,22 +11,22 @@ import 'package:twitter_cosmos_db/presentation/providers/forms/states/signup_for
 
 final signupFormProvider =
     StateNotifierProvider.autoDispose<SignupNotifier, SignupFormState>((ref) {
-  final signupNotifier = SignupNotifier();
-  return signupNotifier;
-});
+      final signupNotifier = SignupNotifier();
+      return signupNotifier;
+    });
 
 class SignupNotifier extends StateNotifier<SignupFormState> {
   SignupNotifier()
-      : super(SignupFormState(
+    : super(
+        SignupFormState(
           nameController: TextEditingController(),
           surnameController: TextEditingController(),
           emailController: TextEditingController(),
           passwordController: TextEditingController(),
           repeatPasswordController: TextEditingController(),
-          vatNumberController: TextEditingController(),
-          companyNameController: TextEditingController(),
-          phoneNumberController: TextEditingController(),
-        ));
+          usernameController: TextEditingController(),
+        ),
+      );
 
   @override
   void dispose() {
@@ -33,9 +35,7 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
     state.emailController?.dispose();
     state.passwordController?.dispose();
     state.repeatPasswordController?.dispose();
-    state.vatNumberController?.dispose();
-    state.companyNameController?.dispose();
-    state.phoneNumberController?.dispose();
+    state.usernameController?.dispose();
     super.dispose();
   }
 
@@ -46,33 +46,36 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
       nameController: state.nameController,
       surnameController: state.surnameController,
       emailController: state.emailController,
-      vatNumberController: state.vatNumberController,
-      companyNameController: state.companyNameController,
-      phoneNumberController: state.phoneNumberController,
       name: GenericText.dirty(user.nome),
       surname: GenericText.dirty(user.cognome),
       email: Email.dirty(user.email),
+      username: GenericText.dirty(state.username.value),
+      imageUrl: user.isProfileUrlValid ? user.profileImageUrl : null,
       status: FormStatus.invalid,
       isValid: false,
     );
   }
 
-  void onSubmit(
-      {required VoidCallback onSubmit,
-      bool validatePasswords = true,
-      bool allowNonVatUserSignup = true,
-      VoidCallback? onPasswordMismatch}) {
+  void onSubmit({
+    required VoidCallback onSubmit,
+    bool validatePasswords = true,
+    bool allowNonVatUserSignup = true,
+    VoidCallback? onPasswordMismatch,
+  }) {
     List<FormzInput> fieldsToValidate = [
       state.email,
       state.name,
       state.surname,
       state.password,
       state.repeatPassword,
+      state.username,
     ];
 
     if (!validatePasswords) {
       fieldsToValidate.removeRange(
-          fieldsToValidate.length - 2, fieldsToValidate.length);
+        fieldsToValidate.length - 2,
+        fieldsToValidate.length,
+      );
       logger.i('Validate pwd length: ${fieldsToValidate.length}');
     }
 
@@ -81,6 +84,7 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
       email: Email.dirty(state.email.value),
       name: GenericText.dirty(state.name.value),
       surname: GenericText.dirty(state.surname.value),
+      username: GenericText.dirty(state.username.value),
       password: PasswordText.dirty(state.password.value),
       repeatPassword: PasswordText.dirty(state.repeatPassword.value),
       isValid: Formz.validate(fieldsToValidate),
@@ -102,13 +106,15 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
     List<FormzInput> fieldsToValidate = [
       name,
       state.surname,
+      state.username,
       state.email,
       state.password,
-      state.repeatPassword
+      state.repeatPassword,
     ];
     state = state.copyWith(
       name: name,
-      isValid: Formz.validate(fieldsToValidate) &&
+      isValid:
+          Formz.validate(fieldsToValidate) &&
           state.password == state.repeatPassword,
     );
   }
@@ -118,13 +124,33 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
     List<FormzInput> fieldsToValidate = [
       state.name,
       surname,
+      state.username,
       state.email,
       state.password,
-      state.repeatPassword
+      state.repeatPassword,
     ];
     state = state.copyWith(
       surname: surname,
-      isValid: Formz.validate(fieldsToValidate) &&
+      isValid:
+          Formz.validate(fieldsToValidate) &&
+          state.password == state.repeatPassword,
+    );
+  }
+
+  void usernameChanged(String value) {
+    final username = GenericText.dirty(value);
+    List<FormzInput> fieldsToValidate = [
+      state.name,
+      state.surname,
+      username,
+      state.email,
+      state.password,
+      state.repeatPassword,
+    ];
+    state = state.copyWith(
+      username: username,
+      isValid:
+          Formz.validate(fieldsToValidate) &&
           state.password == state.repeatPassword,
     );
   }
@@ -134,9 +160,10 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
     List<FormzInput> fieldsToValidate = [
       state.name,
       state.surname,
+      state.username,
       state.email,
       password,
-      state.repeatPassword
+      state.repeatPassword,
     ];
     state = state.copyWith(
       password: password,
@@ -152,7 +179,8 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
       state.surname,
       state.email,
       state.password,
-      repeatPassword
+      repeatPassword,
+      state.username,
     ];
     state = state.copyWith(
       repeatPassword: repeatPassword,
@@ -168,12 +196,22 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
       state.password,
       state.name,
       state.surname,
+      state.username,
     ];
     state = state.copyWith(
       email: email,
-      isValid: Formz.validate(fieldsToValidate) &&
+      isValid:
+          Formz.validate(fieldsToValidate) &&
           state.password == state.repeatPassword,
     );
+  }
+
+  void imageBytesChanged(Uint8List value) {
+    state = state.copyWith(imageBytes: value);
+  }
+
+  void imageFileChanged(XFile value) {
+    state = state.copyWith(imageFile: value);
   }
 
   void clearFormState() {
@@ -181,11 +219,9 @@ class SignupNotifier extends StateNotifier<SignupFormState> {
       email: const Email.pure(),
       name: const GenericText.pure(),
       surname: const GenericText.pure(),
-      vatNumber: const VatNumber.pure(),
-      companyName: const GenericText.pure(),
+      username: const GenericText.pure(),
       password: const PasswordText.pure(),
       repeatPassword: const PasswordText.pure(),
-      phoneNumber: const Phone.pure(),
     );
   }
 }

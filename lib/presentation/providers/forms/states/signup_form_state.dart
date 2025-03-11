@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:twitter_cosmos_db/domain/inputs_validations/inputs.dart';
 import 'package:twitter_cosmos_db/presentation/providers/forms/states/form_status.dart';
 
@@ -11,6 +13,10 @@ class SignupFormState {
   final PasswordText repeatPassword;
   final GenericText name;
   final GenericText surname;
+  final GenericText username;
+  final String? imageUrl;
+  final XFile? imageFile;
+  final Uint8List? imageBytes;
 
   /// Controllers
   final TextEditingController? emailController;
@@ -18,9 +24,7 @@ class SignupFormState {
   final TextEditingController? repeatPasswordController;
   final TextEditingController? nameController;
   final TextEditingController? surnameController;
-  final TextEditingController? vatNumberController;
-  final TextEditingController? companyNameController;
-  final TextEditingController? phoneNumberController;
+  final TextEditingController? usernameController;
 
   const SignupFormState({
     this.status = FormStatus.invalid,
@@ -30,14 +34,16 @@ class SignupFormState {
     this.repeatPassword = const PasswordText.pure(),
     this.name = const GenericText.pure(),
     this.surname = const GenericText.pure(),
+    this.username = const GenericText.pure(),
     this.emailController,
     this.passwordController,
     this.repeatPasswordController,
     this.nameController,
     this.surnameController,
-    this.vatNumberController,
-    this.companyNameController,
-    this.phoneNumberController,
+    this.usernameController,
+    this.imageFile,
+    this.imageUrl,
+    this.imageBytes,
   });
 
   SignupFormState copyWith({
@@ -48,17 +54,16 @@ class SignupFormState {
     PasswordText? repeatPassword,
     GenericText? name,
     GenericText? surname,
-    VatNumber? vatNumber,
-    GenericText? companyName,
-    Phone? phoneNumber,
+    GenericText? username,
+    String? imageUrl,
+    XFile? imageFile,
+    Uint8List? imageBytes,
     TextEditingController? emailController,
     TextEditingController? passwordController,
     TextEditingController? repeatPasswordController,
     TextEditingController? nameController,
     TextEditingController? surnameController,
-    TextEditingController? vatNumberController,
-    TextEditingController? companyNameController,
-    TextEditingController? phoneNumberController,
+    TextEditingController? usernameController,
   }) => SignupFormState(
     status: status ?? this.status,
     isValid: isValid ?? this.isValid,
@@ -67,16 +72,17 @@ class SignupFormState {
     surname: surname ?? this.surname,
     password: password ?? this.password,
     repeatPassword: repeatPassword ?? this.repeatPassword,
-
+    usernameController: usernameController ?? this.usernameController,
     emailController: emailController ?? this.emailController,
     passwordController: passwordController ?? this.passwordController,
     repeatPasswordController:
         repeatPasswordController ?? this.repeatPasswordController,
     nameController: nameController ?? this.nameController,
     surnameController: surnameController ?? this.surnameController,
-    vatNumberController: vatNumberController ?? this.vatNumberController,
-    companyNameController: companyNameController ?? this.companyNameController,
-    phoneNumberController: phoneNumberController ?? this.phoneNumberController,
+    username: username ?? this.username,
+    imageUrl: imageUrl ?? this.imageUrl,
+    imageFile: imageFile ?? this.imageFile,
+    imageBytes: imageBytes ?? this.imageBytes,
   );
 
   bool get isPosting => status == FormStatus.posting;

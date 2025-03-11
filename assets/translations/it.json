@@ -12,6 +12,7 @@
     "login_screen_phone_number_text": "Numero di Telefono",
     "login_screen_name_text": "Nome",
     "login_screen_surname_text": "Cognome",
+    "login_screen_username_text": "Nome Utente",
     "login_screen_vat_number_text": "Numero di P. IVA",
     "login_screen_company_name": "Ragione Sociale",
     "login_screen_password_text": "Password",
@@ -29,6 +30,7 @@
     "login_screen_email_too_many_attempts_snackbar": "Troppi tentativi. Attendere qualche minuto prima di riprovare.",
     "login_screen_or_login_with_text": "Oppure accedi con",
     "login_screen_password_mismatch_snackbar_text": "Le password devono essere identiche!",
+    "login_screen_user_creation_success_snackbar_text": "Utente creato con successo!",
 
     "post_tweet_screen_field_placeholder": "Tweetta",
     "post_tweet_screen_upload_btn_txt": "Carica Tweet {}",

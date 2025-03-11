@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
+import 'package:twitter_cosmos_db/config/helpers/haptic_feedback.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/presentation/navigation/navigation_functions.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
@@ -42,6 +47,18 @@ class SignupScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 50),
+                  StackedIconsOnWidgets(
+                    onFirstIconTap:
+                        () => _displayPickImageDialog(ref, _imageChosenAction),
+                    firstIcon: Icons.edit,
+                    child: RoundedBordersPicture(
+                      height: 200,
+                      borderRadius: 10,
+                      urlPicture: '',
+                      imageBytes: null,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   CustomTextFormField(
                     initialValue: "",
                     autoFillHints: const [AutofillHints.name],
@@ -77,6 +94,26 @@ class SignupScreen extends ConsumerWidget {
                         signupFormProvider.notifier,
                       );
                       signupFormState.surnameChanged(newValue);
+                    },
+                    onSubmitForm:
+                        () => _submitFormAction(authStatusNotifier, ref),
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextFormField(
+                    initialValue: "",
+                    autoFillHints: const [AutofillHints.username],
+                    label: "login_screen_username_text".tr(),
+                    formatter: FormInputFormatters.text,
+                    errorMessage:
+                        signupFormState.isPosting
+                            ? signupFormState.username.errorMessage
+                            : null,
+                    icon: Icons.person,
+                    onChanged: (newValue) {
+                      final signupFormState = ref.read(
+                        signupFormProvider.notifier,
+                      );
+                      signupFormState.usernameChanged(newValue);
                     },
                     onSubmitForm:
                         () => _submitFormAction(authStatusNotifier, ref),
@@ -207,62 +244,75 @@ class SignupScreen extends ConsumerWidget {
   }
 
   Future<void> _signupUsingPassword(WidgetRef ref) async {
-    /*final appConfigs = ref.read(appConfigsProvider).configs;
-    final signupFormNotifier = ref.read(signupFormProvider.notifier);
     final signupFormState = ref.read(signupFormProvider);
-    final userRepository = ref.read(userRepositoryProvider);
-    final authStatusNotifier = ref.read(authStatusProvider.notifier);
-    final colors = Theme.of(ref.context).colorScheme;
-    signupFormNotifier.onSubmit(
-      allowNonVatUserSignup: appConfigs.allowSignupForNonVatUsers,
-      onPasswordMismatch: () {
-        showCustomSnackbar(
-            ref.context, 'login_screen_password_mismatch_snackbar_text'.tr(),
-            backgroundColor: Colors.yellow[300], textColor: Colors.black);
-      },
-      onSubmit: () async {
-        await authStatusNotifier.signupUsingPassword(
-            signupFormState.email.value, signupFormState.password.value,
-            onEmailAlreadyExists: () {
-          showCustomSnackbar(
-              ref.context,
-              'login_screen_email_already_exists_snackbar'
-                  .tr(args: [signupFormState.email.value]),
-              backgroundColor: colors.error);
-        }).then(
-          (userCredential) async {
-            final user = User(
-              nome: signupFormState.name.value,
-              cognome: signupFormState.surname.value,
-              email: signupFormState.email.value,
-              pIva: signupFormState.vatNumber.value,
-              companyName: signupFormState.companyName.value,
-              phoneNumber: signupFormState.phoneNumber.isValid
-                  ? signupFormState.phoneNumber.value
-                  : null,
-            );
-            final uid = userCredential?.user?.uid;
-            if (uid == null) return;
-            await userRepository.createUser(user, uid).then(
-              (value) async {
-                _updateSignedInUserProvider(ref, user);
-                //if (!ref.context.mounted) return;
-                //ref.context.pop();
-                final authPasswordProvider =
-                    ref.read(authPasswordRepositoryProvider);
-                final isEmailVerified =
-                    await authPasswordProvider.isUserEmailVerified();
-                if (!isEmailVerified && ref.context.mounted) {
-                  ref.context.go(verifyEmailPath, extra: {'newUser': value});
-                }
-              },
-            );
+    final signupFormNotifier = ref.read(signupFormProvider.notifier);
 
-            logger.i('Singup with Password! $user');
-          },
+    signupFormNotifier.onSubmit(
+      onSubmit: () async {
+        final userRepo = ref.read(usersRepositoryProvider);
+        final newUser = User(
+          nome: signupFormState.name.value,
+          cognome: signupFormState.surname.value,
+          username: signupFormState.username.value,
+          email: signupFormState.email.value,
+          dateCreated: DateTime.now(),
+          phoneNumber: '',
+          profileImageUrl: '',
         );
+
+        final userCreated = await userRepo.createNewUser(newUser);
+
+        if (userCreated != null) {
+          _updateSignedInUserProvider(ref, userCreated);
+          showCustomSnackbar(
+            ref.context,
+            'login_screen_user_creation_success_snackbar_text'.tr(),
+            backgroundColor: colorSuccess,
+          );
+        } else {
+          hardVibration();
+          showCustomSnackbar(
+            ref.context,
+            'login_screen_email_unexpected_error_snackbar'.tr(),
+            backgroundColor: colorNotOkButton,
+          );
+        }
+        popScreen(ref.context);
       },
-    );*/
+    );
+  }
+
+  void _displayPickImageDialog(
+    WidgetRef ref,
+    Function(XFile?, WidgetRef) onImageChosen,
+  ) {
+    final context = ref.context;
+    final picker = ref.read(imagePickerProvider);
+    if (!context.mounted) return;
+    displayPickImageDialog(
+      context,
+      onGalleryChosen: () async {
+        await picker.selectPhoto().then((file) {
+          onImageChosen(file, ref);
+          popScreen(context);
+        });
+      },
+      onTakePicChosen: () async {
+        await picker.takePhoto().then((file) {
+          onImageChosen(file, ref);
+          popScreen(context);
+        });
+      },
+    );
+  }
+
+  Future<void> _imageChosenAction(XFile? file, WidgetRef ref) async {
+    if (file == null) return;
+    final addPostNotifier = ref.read(signupFormProvider.notifier);
+    final imageBytes = await file.readAsBytes();
+
+    addPostNotifier.imageBytesChanged(imageBytes);
+    addPostNotifier.imageFileChanged(file);
   }
 
   void _updateSignedInUserProvider(WidgetRef ref, User user) {
