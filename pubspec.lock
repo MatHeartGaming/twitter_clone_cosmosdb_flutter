@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.12.0"
+  azure_cosmosdb:
+    dependency: "direct main"
+    description:
+      name: azure_cosmosdb
+      sha256: "97bd364a0ae07b67ab99538c55dcb48f30125fbfa0b0e6f65b44cdac886750f8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -477,6 +485,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  murmur3:
+    dependency: transitive
+    description:
+      name: murmur3
+      sha256: dae85e6df94a31534f6cc8c079e68e93b6b6c2e7165512cf923bca676f130c62
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   nm:
     dependency: transitive
     description:
@@ -549,6 +565,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.1"
+  retry:
+    dependency: transitive
+    description:
+      name: retry
+      sha256: "822e118d5b3aafed083109c72d5f484c6dc66707885e07c0fbcb8b986bba7efc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   riverpod:
     dependency: transitive
     description:
