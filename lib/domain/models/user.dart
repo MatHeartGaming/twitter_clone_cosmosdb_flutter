@@ -1,9 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:azure_cosmosdb/azure_cosmosdb.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
-class User {
+class User extends BaseDocumentWithEtag {
+  @override
+  final String id;
+
   final String nome;
   final String cognome;
   final String username;
@@ -16,6 +21,7 @@ class User {
   final List<String> posted;
 
   User({
+    id,
     required this.nome,
     required this.cognome,
     required this.username,
@@ -26,9 +32,10 @@ class User {
     this.followed = const [],
     this.postLiked = const [],
     this.posted = const [],
-  });
+  }) : id = const Uuid().v6();
 
   User.empty({
+    id,
     this.nome = '',
     this.cognome = '',
     this.username = '',
@@ -39,7 +46,7 @@ class User {
     this.followed = const [],
     this.postLiked = const [],
     this.posted = const [],
-  });
+  }) : id = const Uuid().v6();
 
   String get completeName => '$nome $cognome';
 
@@ -47,6 +54,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'nome': nome,
       'cognome': cognome,
       'username': username,
@@ -62,24 +70,78 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
+      id: map['id'] as String,
       nome: map['nome'] as String,
       cognome: map['cognome'] as String,
       username: map['username'] as String,
       email: map['email'] as String,
-      dateCreated: DateTime.fromMillisecondsSinceEpoch(
-        map['dateCreated'] as int,
-      ),
+      dateCreated:
+          DateTime.tryParse(map['dateCreated'] ?? '')?.toLocal() ??
+          DateTime.now().toLocal(),
       phoneNumber: map['phoneNumber'] as String,
       profileImageUrl: map['profileImageUrl'],
-      followed: List<String>.from(map['followed'] as List<String>),
-      postLiked: List<String>.from(map['postLiked'] as List<String>),
-      posted: List<String>.from(map['posted'] as List<String>),
+      followed:
+          map.containsKey('followed')
+              ? (map['followed'] as List).map((e) => e.toString()).toList()
+              : [],
+      postLiked:
+          map.containsKey('postLiked')
+              ? (map['postLiked'] as List).map((e) => e.toString()).toList()
+              : [],
+      posted:
+          map.containsKey('posted')
+              ? (map['posted'] as List).map((e) => e.toString()).toList()
+              : [],
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJsonMap() => json.encode(toMap());
 
-  factory User.fromJson(String source) =>
+  @override
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'nome': nome,
+    'cognome': cognome,
+    'username': username,
+    'email': email,
+    'dateCreated': dateCreated.toUtc().toIso8601String(),
+    'phoneNumber': phoneNumber,
+    'followed': followed,
+    'postLiked': postLiked,
+    'posted': posted,
+    'profileImageUrl': profileImageUrl,
+  };
+
+  static User fromJson(Map map) {
+    final user = User(
+      id: map['id'] as String,
+      nome: map['nome'] as String,
+      cognome: map['cognome'] as String,
+      username: map['username'] as String,
+      email: map['email'] as String,
+      dateCreated:
+          DateTime.tryParse(map['dateCreated'] ?? '')?.toLocal() ??
+          DateTime.now().toLocal(),
+      phoneNumber: map['phoneNumber'] as String,
+      profileImageUrl: map['profileImageUrl'],
+      followed:
+          map.containsKey('followed')
+              ? (map['followed'] as List).map((e) => e.toString()).toList()
+              : [],
+      postLiked:
+          map.containsKey('postLiked')
+              ? (map['postLiked'] as List).map((e) => e.toString()).toList()
+              : [],
+      posted:
+          map.containsKey('posted')
+              ? (map['posted'] as List).map((e) => e.toString()).toList()
+              : [],
+    );
+    user.setEtag(map);
+    return user;
+  }
+
+  factory User.fromJsonString(String source) =>
       User.fromMap(json.decode(source) as Map<String, dynamic>);
 
   User copyWith({
@@ -111,31 +173,30 @@ class User {
   @override
   bool operator ==(covariant User other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.nome == nome &&
-      other.cognome == cognome &&
-      other.username == username &&
-      other.email == email &&
-      other.dateCreated == dateCreated &&
-      other.phoneNumber == phoneNumber &&
-      other.profileImageUrl == profileImageUrl &&
-      listEquals(other.followed, followed) &&
-      listEquals(other.postLiked, postLiked) &&
-      listEquals(other.posted, posted);
+
+    return other.nome == nome &&
+        other.cognome == cognome &&
+        other.username == username &&
+        other.email == email &&
+        other.dateCreated == dateCreated &&
+        other.phoneNumber == phoneNumber &&
+        other.profileImageUrl == profileImageUrl &&
+        listEquals(other.followed, followed) &&
+        listEquals(other.postLiked, postLiked) &&
+        listEquals(other.posted, posted);
   }
 
   @override
   int get hashCode {
     return nome.hashCode ^
-      cognome.hashCode ^
-      username.hashCode ^
-      email.hashCode ^
-      dateCreated.hashCode ^
-      phoneNumber.hashCode ^
-      profileImageUrl.hashCode ^
-      followed.hashCode ^
-      postLiked.hashCode ^
-      posted.hashCode;
+        cognome.hashCode ^
+        username.hashCode ^
+        email.hashCode ^
+        dateCreated.hashCode ^
+        phoneNumber.hashCode ^
+        profileImageUrl.hashCode ^
+        followed.hashCode ^
+        postLiked.hashCode ^
+        posted.hashCode;
   }
 }

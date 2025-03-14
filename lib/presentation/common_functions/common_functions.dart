@@ -6,7 +6,7 @@ import 'package:twitter_cosmos_db/domain/models/models.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 
 void onLikeTappedAction(Post post, WidgetRef ref) {
-  final likedPostsId = post.id ?? '';
+  final likedPostsId = post.id;
   final userNotifier = ref.read(loadUsersProvider.notifier);
   final postsNotifier = ref.read(loadPostsProvider.notifier);
   final signedInUser = ref.read(signedInUserProvider);

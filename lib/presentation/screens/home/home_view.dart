@@ -23,9 +23,10 @@ class HomeViewState extends ConsumerState<HomeView> {
 
   Future _loadData() async {
     Future.delayed(Duration.zero, () async {
+      final signedInUser = ref.read(signedInUserProvider);
       await ref
           .read(loadPostsProvider.notifier)
-          .fetchAllSignedInuserPosts(username: 'FernandoH');
+          .fetchAllSignedInuserPosts(username: signedInUser?.username ?? '');
     });
   }
 
