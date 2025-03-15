@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
 import 'package:twitter_cosmos_db/presentation/navigation/navigation_functions.dart';
+import 'package:twitter_cosmos_db/presentation/providers/auth/auth_login_provider.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/shared/circle_picture.dart';
 
@@ -25,7 +26,14 @@ class DrawerContent extends ConsumerWidget {
               ? SafeArea(
                 child: ZoomIn(
                   child: TextButton(
-                    onPressed: () => pushToLoginSignupScreen(context),
+                    onPressed: () {
+                      final loginProvider = ref.read(loginSignupProvider);
+                      /*loginProvider.logout().then(
+                        (value) => loginProvider.login(),
+                      );*/
+                      loginProvider.login();
+                      //pushToLoginSignupScreen(context);
+                    },
                     child: Text('login_text').tr(),
                   ),
                 ),
