@@ -1,4 +1,4 @@
-package com.example.twitter_cosmos_db
+package com.example.twitterCosmosDb
 
 import io.flutter.embedding.android.FlutterActivity
 
