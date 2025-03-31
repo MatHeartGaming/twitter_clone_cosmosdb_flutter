@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 import 'package:azure_cosmosdb/azure_cosmosdb.dart';
 import 'package:flutter/foundation.dart';
@@ -159,18 +158,6 @@ class User extends BaseDocumentWithEtag {
         listEquals(other.followed, followed) &&
         listEquals(other.postLiked, postLiked) &&
         listEquals(other.posted, posted);
-
-    return other.nome == nome &&
-        other.cognome == cognome &&
-        other.username == username &&
-        other.email == email &&
-        other.dateCreated == dateCreated &&
-        other.phoneNumber == phoneNumber &&
-        other.profileImageUrl == profileImageUrl &&
-        other.password == password && // Compare password for equality
-        listEquals(other.followed, followed) &&
-        listEquals(other.postLiked, postLiked) &&
-        listEquals(other.posted, posted);
   }
 
   @override
@@ -182,16 +169,6 @@ class User extends BaseDocumentWithEtag {
         dateCreated.hashCode ^
         phoneNumber.hashCode ^
         profileImageUrl.hashCode ^
-        followed.hashCode ^
-        postLiked.hashCode ^
-        posted.hashCode;
-    cognome.hashCode ^
-        username.hashCode ^
-        email.hashCode ^
-        dateCreated.hashCode ^
-        phoneNumber.hashCode ^
-        profileImageUrl.hashCode ^
-        password.hashCode ^ // Include password in hashCode
         followed.hashCode ^
         postLiked.hashCode ^
         posted.hashCode;
