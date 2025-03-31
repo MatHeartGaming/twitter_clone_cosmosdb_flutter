@@ -19,6 +19,7 @@ class User extends BaseDocumentWithEtag {
   final List<String> followed;
   final List<String> postLiked;
   final List<String> posted;
+  final String password; // Added password field
 
   User({
     id,
@@ -29,6 +30,7 @@ class User extends BaseDocumentWithEtag {
     required this.phoneNumber,
     required this.profileImageUrl,
     required this.email,
+    required this.password, // Initialize password
     this.followed = const [],
     this.postLiked = const [],
     this.posted = const [],
@@ -43,6 +45,7 @@ class User extends BaseDocumentWithEtag {
     this.phoneNumber = '',
     this.email = '',
     this.profileImageUrl = '',
+    this.password = '', // Initialize password with an empty string
     this.followed = const [],
     this.postLiked = const [],
     this.posted = const [],
@@ -55,7 +58,7 @@ class User extends BaseDocumentWithEtag {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'nome': nome,
+      'name': nome,
       'cognome': cognome,
       'username': username,
       'email': email,
@@ -65,84 +68,54 @@ class User extends BaseDocumentWithEtag {
       'postLiked': postLiked,
       'posted': posted,
       'profileImageUrl': profileImageUrl,
+      'password': password, // Include password in toMap
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'] as String,
-      nome: map['nome'] as String,
+      nome: map['name'] as String,
       cognome: map['cognome'] as String,
       username: map['username'] as String,
       email: map['email'] as String,
-      dateCreated:
-          DateTime.tryParse(map['dateCreated'] ?? '')?.toLocal() ??
-          DateTime.now().toLocal(),
+      dateCreated: DateTime.fromMillisecondsSinceEpoch(
+        map['dateCreated'] as int,
+      ),
       phoneNumber: map['phoneNumber'] as String,
       profileImageUrl: map['profileImageUrl'],
-      followed:
-          map.containsKey('followed')
-              ? (map['followed'] as List).map((e) => e.toString()).toList()
-              : [],
-      postLiked:
-          map.containsKey('postLiked')
-              ? (map['postLiked'] as List).map((e) => e.toString()).toList()
-              : [],
-      posted:
-          map.containsKey('posted')
-              ? (map['posted'] as List).map((e) => e.toString()).toList()
-              : [],
+      followed: List<String>.from(map['followed'] as List<String>),
+      postLiked: List<String>.from(map['postLiked'] as List<String>),
+      posted: List<String>.from(map['posted'] as List<String>),
+      password: map['password'] as String, // Extract password from map
     );
   }
-
-  String toJsonMap() => json.encode(toMap());
 
   @override
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'nome': nome,
-    'cognome': cognome,
-    'username': username,
-    'email': email,
-    'dateCreated': dateCreated.toUtc().toIso8601String(),
-    'phoneNumber': phoneNumber,
-    'followed': followed,
-    'postLiked': postLiked,
-    'posted': posted,
-    'profileImageUrl': profileImageUrl,
-  };
+  Map<String, dynamic> toJson() => toMap();
 
-  static User fromJson(Map map) {
-    final user = User(
-      id: map['id'] as String,
-      nome: map['nome'] as String,
-      cognome: map['cognome'] as String,
-      username: map['username'] as String,
-      email: map['email'] as String,
+  // ...existing code...
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'] ?? '',
+      nome: json['name'] as String? ?? '', // or just `as String?` if nullable
+      cognome: json['cognome'] as String? ?? '',
+      username: json['username'] ?? '',
+      email: json['email'] ?? '',
       dateCreated:
-          DateTime.tryParse(map['dateCreated'] ?? '')?.toLocal() ??
-          DateTime.now().toLocal(),
-      phoneNumber: map['phoneNumber'] as String,
-      profileImageUrl: map['profileImageUrl'],
-      followed:
-          map.containsKey('followed')
-              ? (map['followed'] as List).map((e) => e.toString()).toList()
-              : [],
-      postLiked:
-          map.containsKey('postLiked')
-              ? (map['postLiked'] as List).map((e) => e.toString()).toList()
-              : [],
-      posted:
-          map.containsKey('posted')
-              ? (map['posted'] as List).map((e) => e.toString()).toList()
-              : [],
+          DateTime.tryParse(json['dateCreated'] ?? '') ?? DateTime.now(),
+      phoneNumber: json['phoneNumber'] as String? ??
+          '', // Provide a default empty string if null
+      profileImageUrl: json['profileImageUrl'] as String? ??
+          '', // Provide a default empty string if null
+      password: json['password'] ?? '',
+      followed: List<String>.from(json['followed'] ?? []),
+      postLiked: List<String>.from(json['postLiked'] ?? []),
+      posted: List<String>.from(json['posted'] ?? []),
     );
-    user.setEtag(map);
-    return user;
   }
-
-  factory User.fromJsonString(String source) =>
-      User.fromMap(json.decode(source) as Map<String, dynamic>);
+  // ...existing code...
 
   User copyWith({
     String? nome,
@@ -152,6 +125,7 @@ class User extends BaseDocumentWithEtag {
     DateTime? dateCreated,
     String? phoneNumber,
     String? profileImageUrl,
+    String? password, // Add password field in copyWith
     List<String>? followed,
     List<String>? postLiked,
     List<String>? posted,
@@ -164,6 +138,7 @@ class User extends BaseDocumentWithEtag {
       dateCreated: dateCreated ?? this.dateCreated,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      password: password ?? this.password, // Ensure password is copied as well
       followed: followed ?? this.followed,
       postLiked: postLiked ?? this.postLiked,
       posted: posted ?? this.posted,
@@ -184,6 +159,18 @@ class User extends BaseDocumentWithEtag {
         listEquals(other.followed, followed) &&
         listEquals(other.postLiked, postLiked) &&
         listEquals(other.posted, posted);
+
+    return other.nome == nome &&
+        other.cognome == cognome &&
+        other.username == username &&
+        other.email == email &&
+        other.dateCreated == dateCreated &&
+        other.phoneNumber == phoneNumber &&
+        other.profileImageUrl == profileImageUrl &&
+        other.password == password && // Compare password for equality
+        listEquals(other.followed, followed) &&
+        listEquals(other.postLiked, postLiked) &&
+        listEquals(other.posted, posted);
   }
 
   @override
@@ -195,6 +182,16 @@ class User extends BaseDocumentWithEtag {
         dateCreated.hashCode ^
         phoneNumber.hashCode ^
         profileImageUrl.hashCode ^
+        followed.hashCode ^
+        postLiked.hashCode ^
+        posted.hashCode;
+    cognome.hashCode ^
+        username.hashCode ^
+        email.hashCode ^
+        dateCreated.hashCode ^
+        phoneNumber.hashCode ^
+        profileImageUrl.hashCode ^
+        password.hashCode ^ // Include password in hashCode
         followed.hashCode ^
         postLiked.hashCode ^
         posted.hashCode;

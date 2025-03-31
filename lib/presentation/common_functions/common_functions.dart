@@ -5,7 +5,7 @@ import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 
-void onLikeTappedAction(Post post, WidgetRef ref) {
+Future<void> onLikeTappedAction(Post post, WidgetRef ref) async {
   final likedPostsId = post.id;
   final userNotifier = ref.read(loadUsersProvider.notifier);
   final postsNotifier = ref.read(loadPostsProvider.notifier);
@@ -30,11 +30,15 @@ void onLikeTappedAction(Post post, WidgetRef ref) {
   }
 
   userNotifier.updateUser(signedInUser.copyWith(postLiked: newPostLikedList));
-  postsNotifier.updatePost(post.copyWith(likes: updatedLikes));
+  await postsNotifier.updatePost(post.copyWith(likes: updatedLikes));
 
   ref.read(signedInUserProvider.notifier).state = signedInUser.copyWith(
     postLiked: newPostLikedList,
   );
+  ref
+      .read(loadPostsProvider.notifier)
+      .fetchAllSignedInuserPosts(username: signedInUser.username);
+  ref.read(loadPostsProvider.notifier).fetchAllPosts();
 }
 
 void onImageTapped(BuildContext context, String imageUrl) {

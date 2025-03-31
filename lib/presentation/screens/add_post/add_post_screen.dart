@@ -11,6 +11,7 @@ import 'package:twitter_cosmos_db/presentation/navigation/navigation_functions.d
 import 'package:twitter_cosmos_db/presentation/providers/forms/add_post_form_provider.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
+import 'package:http/http.dart' as http;
 
 class AddPostScreen extends ConsumerWidget {
   const AddPostScreen({super.key});
@@ -30,8 +31,8 @@ class AddPostScreen extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
               StackedIconsOnWidgets(
-                onFirstIconTap:
-                    () => _displayPickImageDialog(ref, _imageChosenAction),
+                onFirstIconTap: () =>
+                    _displayPickImageDialog(ref, _imageChosenAction),
                 firstIcon: Icons.edit,
                 child: RoundedBordersPicture(
                   width: size.width * 0.8,
@@ -52,7 +53,6 @@ class AddPostScreen extends ConsumerWidget {
                   appPostNotifier.tweetChanged(newValue);
                 },
               ),
-
               FilledButton.tonal(
                 onPressed: () => addPostState.isPosting ? null : onSubmit(ref),
                 child: Row(
@@ -106,8 +106,32 @@ class AddPostScreen extends ConsumerWidget {
     addPostNotifier.imageFileChanged(file);
   }
 
-  void onSubmit(WidgetRef ref) {
+  Future<String?> uploadImage(XFile imageFile) async {
+    final uri = Uri.parse(
+        'https://new-twitter-clone-function.azurewebsites.net/api/imageuploadfunction');
+    final request = http.MultipartRequest('POST', uri);
+    request.files
+        .add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      logger.i('Response body: $response');
+      final resBody = await response.stream.bytesToString();
+      logger.i('Response body: $resBody');
+      // final jsonRes = json.decode(resBody);
+      return resBody; // Extract image URL
+    } else {
+      logger.e('Image upload failed with ${response.statusCode}');
+      return null;
+    }
+  }
+
+  Future<void> onSubmit(WidgetRef ref) async {
     final postState = ref.read(addPostProvider);
+    String? imageUrl;
+    if (postState.imageFile != null) {
+      imageUrl = await uploadImage(postState.imageFile!);
+    }
     final postStateNotifier = ref.read(addPostProvider.notifier);
     final signedInUser = ref.read(signedInUserProvider);
     if (signedInUser == null) return;
@@ -123,7 +147,7 @@ class AddPostScreen extends ConsumerWidget {
         final post = Post(
           body: postState.tweet.value,
           userId: signedInUser.username,
-          urlImage: '',
+          urlImage: imageUrl,
         );
         final newPost = await loadPost.addPost(post);
 

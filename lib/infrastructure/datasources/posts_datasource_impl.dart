@@ -16,6 +16,16 @@ class PostsDatasourceImpl implements PostsDatasource {
   }
 
   @override
+  Future<Post?> getPostById(String postId) async {
+    var rng = Random();
+    int randomTime = rng.nextInt(300);
+    return await Future.delayed(
+      Duration(milliseconds: randomTime),
+      () => tweets.where((element) => element.userId == postId).toList().first,
+    );
+  }
+
+  @override
   Future<List<Post>> getPostsByUserName(String username) async {
     var rng = Random();
     int randomTime = rng.nextInt(300);

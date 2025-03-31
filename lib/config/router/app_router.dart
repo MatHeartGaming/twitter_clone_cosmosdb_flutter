@@ -16,12 +16,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoadingScreen(),
       ),
       GoRoute(
-          name: LoginSignupView.name,
-          path: loginPath,
-          builder: (context, state) {
-            return const LoginSignupView();
-          },
-        ),
+        name: LoginSignupView.name,
+        path: loginPath,
+        builder: (context, state) {
+          return const LoginSignupView();
+        },
+      ),
       GoRoute(
         name: HomeScreen.name,
         path: '$homePath/:page',
@@ -46,7 +46,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       //final signedInUser = ref.watch(signedInUserProvider);
 
       if (isGoingTo == basePath) {
-        return '$homePath/0';
+        return '$loginPath';
       }
 
       return isGoingTo;

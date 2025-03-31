@@ -7,7 +7,7 @@ class UsersRepositoryImpl implements UsersRepository {
   final UsersDatasource _db;
 
   UsersRepositoryImpl([UsersDatasource? db])
-    : _db = db ?? UsersDatasourceImpl();
+      : _db = db ?? UsersDatasourceImpl();
 
   @override
   Future<List<User>> getAllUsers() {
@@ -35,7 +35,17 @@ class UsersRepositoryImpl implements UsersRepository {
   }
 
   @override
+  Future<String?> login(String email, String password) {
+    return _db.login(email, password);
+  }
+
+  @override
   Future<List<User>> searchUsersById(String username) {
     return _db.searchUsersById(username);
+  }
+
+  @override
+  Future<User?> getUserByEmail(String email) {
+    return _db.getUserByEmail(email);
   }
 }

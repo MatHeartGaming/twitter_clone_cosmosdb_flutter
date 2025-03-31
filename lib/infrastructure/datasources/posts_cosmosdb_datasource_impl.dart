@@ -1,4 +1,3 @@
-
 import 'package:azure_cosmosdb/azure_cosmosdb.dart';
 import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
 import 'package:twitter_cosmos_db/config/constants/environment.dart';
@@ -52,6 +51,32 @@ class PostsCosmosdbDatasourceImpl implements PostsDatasource {
   }
 
   @override
+  Future<Post?> getPostById(String postId) async {
+    final database = await _cosmosDB.databases.open('twitter_db');
+
+    final postsCollection = await database.containers.openOrCreate(
+      'Posts',
+      partitionKey: PartitionKeySpec.id,
+      //indexingPolicy: indexingPolicy,
+    );
+
+    postsCollection.registerBuilder(Post.fromJson);
+
+    final postQueryResult = await postsCollection.query<Post>(
+      Query(
+        'SELECT * FROM c WHERE c.id = @postId',
+        params: {'@postId': postId},
+      ),
+    );
+
+    final posts = postQueryResult.toList();
+
+    // Return the first post if it exists, otherwise return null
+    return posts.isNotEmpty ? posts.first : null;
+  }
+
+// https://new-twitter-clone-function.azurewebsites.net/api/likepostfunction
+  @override
   Future<Post?> createPost(Post post) async {
     final database = await _cosmosDB.databases.open('twitter_db');
 
@@ -72,7 +97,7 @@ class PostsCosmosdbDatasourceImpl implements PostsDatasource {
 
   @override
   Future<Post?> updatePost(Post post) async {
-   final database = await _cosmosDB.databases.open('twitter_db');
+    final database = await _cosmosDB.databases.open('twitter_db');
 
     final postsCollection = await database.containers.openOrCreate(
       'Posts',
@@ -81,6 +106,7 @@ class PostsCosmosdbDatasourceImpl implements PostsDatasource {
     );
 
     postsCollection.registerBuilder(Post.fromJson);
+    logger.i('Post to update: ${post.toJson()}');
 
     final postToUpdate = await postsCollection.upsert(post);
 

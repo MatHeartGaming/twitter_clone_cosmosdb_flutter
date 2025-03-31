@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:twitter_cosmos_db/domain/models/models.dart';
-import 'package:twitter_cosmos_db/presentation/navigation/navigation_functions.dart';
 import 'package:twitter_cosmos_db/presentation/providers/auth/auth_login_provider.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/shared/circle_picture.dart';
@@ -24,81 +23,80 @@ class DrawerContent extends ConsumerWidget {
         children: [
           signedInUser == null
               ? SafeArea(
-                child: ZoomIn(
-                  child: TextButton(
-                    onPressed: () {
-                      final loginProvider = ref.read(loginSignupProvider);
-                      /*loginProvider.logout().then(
+                  child: ZoomIn(
+                    child: TextButton(
+                      onPressed: () {
+                        final loginProvider = ref.read(loginSignupProvider);
+                        /*loginProvider.logout().then(
                         (value) => loginProvider.login(),
                       );*/
-                      loginProvider.login();
-                      //pushToLoginSignupScreen(context);
-                    },
-                    child: Text('login_text').tr(),
+                        loginProvider.login();
+                        //pushToLoginSignupScreen(context);
+                      },
+                      child: Text('login_text').tr(),
+                    ),
+                  ),
+                )
+              : DrawerHeader(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CirclePicture(
+                            urlPicture: user.isProfileUrlValid
+                                ? user.profileImageUrl
+                                : '',
+                            minRadius: 20,
+                            maxRadius: 20,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(FontAwesomeIcons.gears),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        user.completeName,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        user.username,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        'drawer_following_count',
+                      ).tr(args: ['${user.followed.length}']),
+                    ],
                   ),
                 ),
-              )
-              : DrawerHeader(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CirclePicture(
-                          urlPicture:
-                              user.isProfileUrlValid
-                                  ? user.profileImageUrl
-                                  : '',
-                          minRadius: 20,
-                          maxRadius: 20,
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(FontAwesomeIcons.gears),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      user.completeName,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      user.username,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      'drawer_following_count',
-                    ).tr(args: ['${user.followed.length}']),
-                  ],
-                ),
-              ),
 
           // Expanding the list of menu items to push the toggle button to the bottom
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
-              children:
-                  _getMenuItems().entries
-                      .map(
-                        (item) => SlideInLeft(
-                          child: ListTile(
-                            leading: Icon(item.value),
-                            title: Text(
-                              item.key,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
+              children: _getMenuItems()
+                  .entries
+                  .map(
+                    (item) => SlideInLeft(
+                      child: ListTile(
+                        leading: Icon(item.value),
+                        title: Text(
+                          item.key,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
                         ),
-                      )
-                      .toList(),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
 
@@ -115,10 +113,9 @@ class DrawerContent extends ConsumerWidget {
                       .read(isDarkModeProvider.notifier)
                       .update((state) => isDark);
                 },
-                icon:
-                    isDarkMode
-                        ? FadeIn(child: Icon(Icons.light_mode))
-                        : FadeIn(child: Icon(Icons.dark_mode)),
+                icon: isDarkMode
+                    ? FadeIn(child: Icon(Icons.light_mode))
+                    : FadeIn(child: Icon(Icons.dark_mode)),
               ),
             ),
           ),

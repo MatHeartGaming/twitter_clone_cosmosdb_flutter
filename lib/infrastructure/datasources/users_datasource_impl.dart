@@ -91,4 +91,16 @@ class UsersDatasourceImpl implements UsersDatasource {
       return usersList.toList();
     });
   }
+  
+  @override
+  Future<User?> getUserByEmail(String email) {
+    // TODO: implement getUserByEmail
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<String?> login(String email, String password) {
+    // TODO: implement login
+    throw UnimplementedError();
+  }
 }

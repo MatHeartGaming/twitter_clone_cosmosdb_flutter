@@ -3,12 +3,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:twitter_cosmos_db/domain/models/models.dart';
+import 'package:twitter_cosmos_db/config/constants/app_constants.dart';
+import 'package:twitter_cosmos_db/presentation/navigation/navigation_functions.dart';
 import 'package:twitter_cosmos_db/presentation/providers/providers.dart';
 import 'package:twitter_cosmos_db/presentation/widgets/widgets.dart';
 
 class LoginScreen extends ConsumerWidget {
   static String name = 'LoginScreen';
+  static const String homePath = '/home'; // Define the homePath constant
 
   const LoginScreen({super.key});
 
@@ -30,7 +32,7 @@ class LoginScreen extends ConsumerWidget {
                   onPressed: () =>
                       authStatusNotifier.authStatus == AuthStatus.checking
                           ? null
-                          : _loginUsingPassword(ref),
+                          : _loginUsingPassword(context, ref),
                   icon: const Icon(Icons.check_circle_outline_outlined)),
             ),
           ],
@@ -60,7 +62,7 @@ class LoginScreen extends ConsumerWidget {
                         loginFormState.emailChanged(newValue);
                       },
                       onSubmitForm: () =>
-                          _submitFormAction(authStatusNotifier, ref),
+                          _submitFormAction(context, authStatusNotifier, ref),
                     ),
                     const SizedBox(
                       height: 20,
@@ -86,22 +88,7 @@ class LoginScreen extends ConsumerWidget {
                         loginFormState.passwordChanged(newValue);
                       },
                       onSubmitForm: () =>
-                          _submitFormAction(authStatusNotifier, ref),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "user_screen_change_passwor_text",
-                          style: TextStyle(fontSize: 12),
-                        ).tr(),
-                        TextButton(
-                            onPressed: () => _sendResetPasswordLink(ref),
-                            child: const Text("reset_text").tr())
-                      ],
+                          _submitFormAction(context, authStatusNotifier, ref),
                     ),
                     const SizedBox(
                       height: 20,
@@ -130,7 +117,7 @@ class LoginScreen extends ConsumerWidget {
                     ),
                     FilledButton.tonal(
                         onPressed: () =>
-                            _submitFormAction(authStatusNotifier, ref),
+                            _submitFormAction(context, authStatusNotifier, ref),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -159,36 +146,28 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _loginUsingPassword(WidgetRef ref) async {
-    //final signupFormState = ref.read(signupFormProvider);
-    final loginFormNotifier = ref.read(loginFormProvider.notifier);
-    final loginFormState = ref.read(loginFormProvider);
-    final authStatusNotifier = ref.read(authStatusProvider.notifier);
-    
+  Future<void> _loginUsingPassword(BuildContext context, WidgetRef ref) async {
+    final signupFormState = ref.read(loginFormProvider);
+    final userRepo = ref.read(usersRepositoryProvider);
+    final success = await userRepo.login(
+      signupFormState.email.value,
+      signupFormState.password.value,
+    );
+    if (success == null) {
+      logger.e('Login Failed');
+    } else {
+      logger.i("login success auth state");
+      final user = await userRepo.getUserByEmail(signupFormState.email.value);
+      if (!context.mounted) return;
+      ref.read(signedInUserProvider.notifier).update((state) => user);
+      gotoHomeScreenNavigation(ref.context);
+    }
   }
 
-  Future<void>? _submitFormAction(AuthState authStatusNotifier, WidgetRef ref) {
+  Future<void>? _submitFormAction(
+      BuildContext context, AuthState authStatusNotifier, WidgetRef ref) {
     return authStatusNotifier.authStatus == AuthStatus.checking
         ? null
-        : _loginUsingPassword(ref);
-  }
-
-  void _sendResetPasswordLink(WidgetRef ref) {
-    final loginFormState = ref.watch(loginFormProvider);
-    if (loginFormState.email.isNotValid) {
-      showCustomSnackbar(
-          ref.context,
-          duration: const Duration(seconds: 3),
-          'login_screen_email_validation_snackbar_error'
-              .tr(args: [loginFormState.email.value]));
-      return;
-    }
-    //sendResetPasswordEmail(ref, loginFormState.email.value);
-  }
-
-  void _updateSignedInUserProvider(WidgetRef ref, User user) {
-    ref.read(signedInUserProvider.notifier).update(
-          (state) => user,
-        );
+        : _loginUsingPassword(context, ref);
   }
 }

@@ -7,7 +7,7 @@ class PostsRepositoryImpl implements PostsRepository {
   final PostsDatasource _db;
 
   PostsRepositoryImpl([PostsDatasource? db])
-    : _db = db ?? PostsDatasourceImpl();
+      : _db = db ?? PostsDatasourceImpl();
 
   @override
   Future<List<Post>> getAllPosts() {
@@ -22,6 +22,11 @@ class PostsRepositoryImpl implements PostsRepository {
   @override
   Future<Post?> updatePost(Post post) {
     return _db.updatePost(post);
+  }
+
+  @override
+  Future<Post?> getPostById(String postId) {
+    return _db.getPostById(postId);
   }
 
   @override

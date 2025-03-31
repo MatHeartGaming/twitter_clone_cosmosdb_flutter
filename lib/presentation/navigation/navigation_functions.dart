@@ -16,3 +16,13 @@ void pushToLoginSignupScreen(BuildContext context) {
   if (!context.mounted) return;
   context.push(loginPath);
 }
+
+void gotoHomeScreenNavigation(BuildContext context) {
+  if (!context.mounted) return;
+  context.go('$homePath/0');
+}
+
+void goToLoginSignupScreen(BuildContext context) {
+  if (!context.mounted) return;
+  context.go(loginPath);
+}

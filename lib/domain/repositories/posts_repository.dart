@@ -5,4 +5,5 @@ abstract class PostsRepository {
   Future<List<Post>> getPostsByUserName(String username);
   Future<Post?> updatePost(Post post);
   Future<Post?> createPost(Post post);
+  Future<Post?> getPostById(String postId);
 }
