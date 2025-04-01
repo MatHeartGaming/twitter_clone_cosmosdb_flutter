@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -117,9 +118,9 @@ class _CommentsModal extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Comments',
+                'comments_screen_title',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              ).tr(),
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
@@ -153,8 +154,8 @@ class _CommentsModal extends ConsumerWidget {
               Expanded(
                 child: TextField(
                   controller: commentController,
-                  decoration: const InputDecoration(
-                    hintText: 'Add a comment...',
+                  decoration: InputDecoration(
+                    hintText: 'comments_screen_add_comment_hint'.tr(),
                   ),
                 ),
               ),

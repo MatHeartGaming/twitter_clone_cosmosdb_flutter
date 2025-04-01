@@ -82,25 +82,33 @@ class UsersDatasourceImpl implements UsersDatasource {
     return Future.delayed(Duration(milliseconds: randomTime), () {
       if (username.isEmpty) return [];
       final usersList = users.where(
-        (u) => u.username.toLowerCase().contains(
-          username.trim().toLowerCase(),
-        ) || u.completeName.toLowerCase().contains(
-          username.trim().toLowerCase(),
-        ),
+        (u) =>
+            u.username.toLowerCase().contains(username.trim().toLowerCase()) ||
+            u.completeName.toLowerCase().contains(
+              username.trim().toLowerCase(),
+            ),
       );
       return usersList.toList();
     });
   }
-  
+
   @override
-  Future<User?> getUserByEmail(String email) {
-    // TODO: implement getUserByEmail
-    throw UnimplementedError();
+  Future<User?> getUserByEmail(String email) async {
+    var rng = Random();
+    int randomTime = rng.nextInt(200);
+    return await Future.delayed(Duration(milliseconds: randomTime), () {
+      final indexFound = users.indexWhere((u) {
+        return u.email == email;
+      });
+      if (indexFound != -1) {
+        return users[indexFound];
+      }
+      return null;
+    });
   }
-  
+
   @override
-  Future<String?> login(String email, String password) {
-    // TODO: implement login
-    throw UnimplementedError();
+  Future<String?> login(String email, String password) async {
+    return '';
   }
 }

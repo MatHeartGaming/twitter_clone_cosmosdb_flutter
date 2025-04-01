@@ -46,7 +46,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       //final signedInUser = ref.watch(signedInUserProvider);
 
       if (isGoingTo == basePath) {
-        return '$loginPath';
+        return loginPath;
       }
 
       return isGoingTo;
