@@ -38,7 +38,7 @@ class UsersCosmosdbImpl implements UsersDatasource {
 
         // Save token in SharedPreferences
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('auth_token', decoded['token']); // Save token
+        await prefs.setString('auth_token', decoded['token']);
 
         return decoded['token'];
       } else {
@@ -76,7 +76,6 @@ class UsersCosmosdbImpl implements UsersDatasource {
       logger.i(newUser);
       return user;
     } else {
-      // Handle the error if the API call fails
       logger.e('Error: ${response.statusCode}');
       return null;
     }

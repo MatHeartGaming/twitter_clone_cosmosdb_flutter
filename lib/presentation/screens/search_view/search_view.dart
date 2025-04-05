@@ -30,16 +30,16 @@ class SearchView extends ConsumerWidget {
                       searchSreenSearchBarProvider.notifier,
                     );
                     productListSearchNotifier.clearSearchText();
-                    productListSearchNotifier.searchProductsBy();
+                    productListSearchNotifier.searchUsersBy();
                   },
                   icon: const Icon(FontAwesomeIcons.xmark),
                 ),
                 onChanged: (newValue) {
-                  final productListSearchNotifier = ref.read(
+                  final usersListSearchNotifier = ref.read(
                     searchSreenSearchBarProvider.notifier,
                   );
-                  productListSearchNotifier.onSearchTextChange(newValue);
-                  productListSearchNotifier.searchProductsBy();
+                  usersListSearchNotifier.onSearchTextChange(newValue);
+                  usersListSearchNotifier.searchUsersBy();
                 },
               ),
 

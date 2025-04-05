@@ -49,8 +49,8 @@ class SignupScreen extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 50),
                   StackedIconsOnWidgets(
-                    onFirstIconTap: () =>
-                        _displayPickImageDialog(ref, _imageChosenAction),
+                    onFirstIconTap:
+                        () => _displayPickImageDialog(ref, _imageChosenAction),
                     firstIcon: Icons.edit,
                     child: RoundedBordersPicture(
                       height: 200,
@@ -65,9 +65,10 @@ class SignupScreen extends ConsumerWidget {
                     autoFillHints: const [AutofillHints.name],
                     label: "login_screen_name_text".tr(),
                     formatter: FormInputFormatters.text,
-                    errorMessage: signupFormState.isPosting
-                        ? signupFormState.name.errorMessage
-                        : null,
+                    errorMessage:
+                        signupFormState.isPosting
+                            ? signupFormState.name.errorMessage
+                            : null,
                     icon: Icons.person,
                     onChanged: (newValue) {
                       final signupFormState = ref.read(
@@ -75,8 +76,8 @@ class SignupScreen extends ConsumerWidget {
                       );
                       signupFormState.nameChanged(newValue);
                     },
-                    onSubmitForm: () =>
-                        _submitFormAction(authStatusNotifier, ref),
+                    onSubmitForm:
+                        () => _submitFormAction(authStatusNotifier, ref),
                   ),
                   const SizedBox(height: 20),
                   CustomTextFormField(
@@ -84,9 +85,10 @@ class SignupScreen extends ConsumerWidget {
                     autoFillHints: const [AutofillHints.familyName],
                     label: "login_screen_surname_text".tr(),
                     formatter: FormInputFormatters.text,
-                    errorMessage: signupFormState.isPosting
-                        ? signupFormState.surname.errorMessage
-                        : null,
+                    errorMessage:
+                        signupFormState.isPosting
+                            ? signupFormState.surname.errorMessage
+                            : null,
                     icon: Icons.person,
                     onChanged: (newValue) {
                       final signupFormState = ref.read(
@@ -94,8 +96,8 @@ class SignupScreen extends ConsumerWidget {
                       );
                       signupFormState.surnameChanged(newValue);
                     },
-                    onSubmitForm: () =>
-                        _submitFormAction(authStatusNotifier, ref),
+                    onSubmitForm:
+                        () => _submitFormAction(authStatusNotifier, ref),
                   ),
                   const SizedBox(height: 20),
                   CustomTextFormField(
@@ -103,9 +105,10 @@ class SignupScreen extends ConsumerWidget {
                     autoFillHints: const [AutofillHints.username],
                     label: "login_screen_username_text".tr(),
                     formatter: FormInputFormatters.text,
-                    errorMessage: signupFormState.isPosting
-                        ? signupFormState.username.errorMessage
-                        : null,
+                    errorMessage:
+                        signupFormState.isPosting
+                            ? signupFormState.username.errorMessage
+                            : null,
                     icon: Icons.person,
                     onChanged: (newValue) {
                       final signupFormState = ref.read(
@@ -113,8 +116,8 @@ class SignupScreen extends ConsumerWidget {
                       );
                       signupFormState.usernameChanged(newValue);
                     },
-                    onSubmitForm: () =>
-                        _submitFormAction(authStatusNotifier, ref),
+                    onSubmitForm:
+                        () => _submitFormAction(authStatusNotifier, ref),
                   ),
                   const SizedBox(height: 20),
                   CustomTextFormField(
@@ -122,9 +125,10 @@ class SignupScreen extends ConsumerWidget {
                     autoFillHints: const [AutofillHints.email],
                     label: "login_screen_email_text".tr(),
                     formatter: FormInputFormatters.email,
-                    errorMessage: signupFormState.isPosting
-                        ? signupFormState.email.errorMessage
-                        : null,
+                    errorMessage:
+                        signupFormState.isPosting
+                            ? signupFormState.email.errorMessage
+                            : null,
                     icon: Icons.email_outlined,
                     onChanged: (newValue) {
                       final signupFormState = ref.read(
@@ -132,8 +136,8 @@ class SignupScreen extends ConsumerWidget {
                       );
                       signupFormState.emailChanged(newValue);
                     },
-                    onSubmitForm: () =>
-                        _submitFormAction(authStatusNotifier, ref),
+                    onSubmitForm:
+                        () => _submitFormAction(authStatusNotifier, ref),
                   ),
                   const SizedBox(height: 20),
                   CustomTextFormField(
@@ -147,9 +151,10 @@ class SignupScreen extends ConsumerWidget {
                       },
                       icon: showHidePasswordIcon(showPassword),
                     ),
-                    errorMessage: signupFormState.isPosting
-                        ? signupFormState.password.errorMessage
-                        : null,
+                    errorMessage:
+                        signupFormState.isPosting
+                            ? signupFormState.password.errorMessage
+                            : null,
                     icon: Icons.lock,
                     obscureText: !showPassword,
                     onChanged: (newValue) {
@@ -158,8 +163,8 @@ class SignupScreen extends ConsumerWidget {
                       );
                       signupFormState.passwordChanged(newValue);
                     },
-                    onSubmitForm: () =>
-                        _submitFormAction(authStatusNotifier, ref),
+                    onSubmitForm:
+                        () => _submitFormAction(authStatusNotifier, ref),
                   ),
                   const SizedBox(height: 20),
                   CustomTextFormField(
@@ -172,9 +177,10 @@ class SignupScreen extends ConsumerWidget {
                       },
                       icon: showHidePasswordIcon(showRepeatPassword),
                     ),
-                    errorMessage: signupFormState.isPosting
-                        ? signupFormState.repeatPassword.errorMessage
-                        : null,
+                    errorMessage:
+                        signupFormState.isPosting
+                            ? signupFormState.repeatPassword.errorMessage
+                            : null,
                     icon: Icons.lock,
                     obscureText: !showRepeatPassword,
                     onChanged: (newValue) {
@@ -183,8 +189,8 @@ class SignupScreen extends ConsumerWidget {
                       );
                       signupFormState.repeatPasswordChanged(newValue);
                     },
-                    onSubmitForm: () =>
-                        _submitFormAction(authStatusNotifier, ref),
+                    onSubmitForm:
+                        () => _submitFormAction(authStatusNotifier, ref),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -253,9 +259,10 @@ class SignupScreen extends ConsumerWidget {
           password: signupFormState.password.value,
           dateCreated: DateTime.now(),
           phoneNumber: '',
-          profileImageUrl: signupFormState.imageFile == null
-              ? ''
-              : await uploadImage(signupFormState.imageFile) ?? "",
+          profileImageUrl:
+              signupFormState.imageFile == null
+                  ? ''
+                  : await uploadImage(signupFormState.imageFile) ?? "",
         );
 
         final userCreated = await userRepo.createNewUser(newUser);
@@ -323,7 +330,8 @@ Future<String?> uploadImage(XFile? imageFile) async {
     return null;
   }
   final uri = Uri.parse(
-      'https://new-twitter-clone-function.azurewebsites.net/api/imageuploadfunction');
+    'https://new-twitter-clone-function.azurewebsites.net/api/imageuploadfunction',
+  );
   final request = http.MultipartRequest('POST', uri);
   request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 

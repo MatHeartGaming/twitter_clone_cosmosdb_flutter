@@ -39,7 +39,7 @@ class UsersSearchScreenSearchBarNotifier
     state = state.copyWith(searchedUsers: users);
   }
 
-  Future<List<User>> searchProductsBy() async {
+  Future<List<User>> searchUsersBy() async {
     final searchText = state.searchText.toLowerCase().trim();
     List<User> users = await _usersRepository.searchUsersById(searchText);
     state = state.copyWith(searchedUsers: users);

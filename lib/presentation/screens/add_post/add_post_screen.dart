@@ -31,8 +31,8 @@ class AddPostScreen extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
               StackedIconsOnWidgets(
-                onFirstIconTap: () =>
-                    _displayPickImageDialog(ref, _imageChosenAction),
+                onFirstIconTap:
+                    () => _displayPickImageDialog(ref, _imageChosenAction),
                 firstIcon: Icons.edit,
                 child: RoundedBordersPicture(
                   width: size.width * 0.8,
@@ -108,10 +108,12 @@ class AddPostScreen extends ConsumerWidget {
 
   Future<String?> uploadImage(XFile imageFile) async {
     final uri = Uri.parse(
-        'https://new-twitter-clone-function.azurewebsites.net/api/imageuploadfunction');
+      'https://new-twitter-clone-function.azurewebsites.net/api/imageuploadfunction',
+    );
     final request = http.MultipartRequest('POST', uri);
-    request.files
-        .add(await http.MultipartFile.fromPath('image', imageFile.path));
+    request.files.add(
+      await http.MultipartFile.fromPath('image', imageFile.path),
+    );
 
     final response = await request.send();
     if (response.statusCode == 200) {
